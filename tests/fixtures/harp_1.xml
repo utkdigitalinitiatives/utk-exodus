@@ -1,0 +1,60 @@
+
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <titleInfo>
+    <title>The Harp of Columbia</title>
+  </titleInfo>
+  <abstract>The Harp of Columbia is a shape-note tunebook published in 1857 that was used in East Tennessee singing schools. It contains a variety of psalm and hymn tunes, odes and anthems, adapted for church services, singing-schools and societies.</abstract>
+  <name authority="naf" valueURI="http://id.loc.gov/authorities/names/no2002022963">
+    <namePart>Swan, W. H. (William H.)</namePart>
+    <role>
+      <roleTerm authority="marcrelator" valueURI="http://id.loc.gov/vocabulary/relators/cmp">Composer</roleTerm>
+    </role>
+    <role>
+      <roleTerm authority="marcrelator" valueURI="http://id.loc.gov/vocabulary/relators/com">Compiler</roleTerm>
+    </role>
+  </name>
+  <name authority="naf" valueURI="http://id.loc.gov/authorities/names/n78013127">
+    <namePart>Swan, Marcus Lafayette</namePart>
+    <role>
+      <roleTerm authority="marcrelator" valueURI="http://id.loc.gov/vocabulary/relators/cmp">Composer</roleTerm>
+    </role>
+    <role>
+      <roleTerm authority="marcrelator" valueURI="http://id.loc.gov/vocabulary/relators/com">Compiler</roleTerm>
+    </role>
+  </name>
+  <originInfo>
+    <dateIssued>1857</dateIssued>
+    <dateIssued encoding="edtf" keyDate="yes">1857</dateIssued>
+  </originInfo>
+  <physicalDescription>
+    <form authority="aat" valueURI="http://vocab.getty.edu/aat/300026463">hymnals</form>
+    <extent>1 score</extent>
+  </physicalDescription>
+  <subject authority="lcsh" valueURI="http://id.loc.gov/authorities/subjects/sh85063617">
+    <topic>Hymns, English</topic>
+  </subject>
+  <subject authority="lcsh" valueURI="http://id.loc.gov/authorities/subjects/sh85116385">
+    <topic>Sacred vocal music</topic>
+  </subject>
+  <subject authority="lcsh" valueURI="http://id.loc.gov/authorities/subjects/sh87007577">
+    <topic>Shape-note hymnals</topic>
+  </subject>
+  <subject authority="lcsh" valueURI="http://id.loc.gov/authorities/subjects/sh85122382">
+    <topic>Sight-singing</topic>
+  </subject>
+  <typeOfResource collection="yes">notated music</typeOfResource>
+  <typeOfResource collection="yes">text</typeOfResource>
+  <language>
+    <languageTerm authority="iso639-2b" type="text">English</languageTerm>
+  </language>
+  <classification authority="lcc">M2117. H25</classification>
+  <location>
+    <physicalLocation valueURI="http://id.loc.gov/authorities/names/no2014027633">
+            University of Tennessee, Knoxville. Special Collections
+        </physicalLocation>
+  </location>
+  <recordInfo>
+    <recordContentSource valueURI="http://id.loc.gov/authorities/names/n87808088">University of Tennessee, Knoxville. Libraries</recordContentSource>
+  </recordInfo>
+  <accessCondition type="use and reproduction" xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">No Copyright - United States</accessCondition>
+</mods>
