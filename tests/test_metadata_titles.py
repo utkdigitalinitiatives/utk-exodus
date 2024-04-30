@@ -8,7 +8,7 @@ fixtures_path = Path(__file__).parent / "fixtures"
 # Set namespaces
 NAMESPACES = {'mods': 'http://www.loc.gov/mods/v3', 'xlink': 'http://www.w3.org/1999/xlink'}
 
-# List fixtures to test with expected results
+# List fixtures to test with expected results -- Cover supplied, not supplied, and supplied plus not supplied
 @pytest.fixture(
     params=[
         {
@@ -23,6 +23,20 @@ NAMESPACES = {'mods': 'http://www.loc.gov/mods/v3', 'xlink': 'http://www.w3.org/
             "expected_results": {
                 'title': ['University of Tennessee Volunteers Swimming-Diving media guide, 1969'],
                 'alternative_title': ['Swimming 1969: The University of Tennessee ']
+            }
+        },
+        {
+            "filename": "hesler_10076.xml",
+            "expected_results": {
+                "title": ['Coprinus notebook 1'],
+                "alternative_title": []
+            }
+        },
+{
+            "filename": "utsmc_17870.xml",
+            "expected_results": {
+                "title": ['Prussian heroes march'],
+                "alternative_title": ['Prussian heroes: Prussen helden march']
             }
         }
     ]

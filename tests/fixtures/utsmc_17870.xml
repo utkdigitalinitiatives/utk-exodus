@@ -1,0 +1,53 @@
+
+<mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-5.xsd">
+  <identifier type="local">0012_003259_000264</identifier>
+  <titleInfo>
+    <title>Prussian heroes march</title>
+  </titleInfo>
+  <titleInfo type="alternative">
+    <title>Prussian heroes: Prussen helden march</title>
+  </titleInfo>
+  <originInfo>
+    <dateIssued>1896-1967</dateIssued>
+    <dateIssued encoding="edtf" keyDate="yes" point="start">1896</dateIssued>
+    <dateIssued encoding="edtf" point="end">1967</dateIssued>
+    <place>
+      <placeTerm valueURI="http://id.loc.gov/authorities/names/n79007751">New York (N.Y.)</placeTerm>
+    </place>
+    <publisher>S.T. Gordon</publisher>
+  </originInfo>
+  <physicalDescription>
+    <extent>1 score (6 pages)</extent>
+    <form authority="aat" valueURI="http://vocab.getty.edu/aat/300026430">sheet music</form>
+    <internetMediaType>image/jpeg</internetMediaType>
+  </physicalDescription>
+  <name authority="naf" valueURI="http://id.loc.gov/authorities/names/n82248399">
+    <namePart>Herrmann, Hugo, 1896-1967</namePart>
+    <role>
+      <roleTerm authority="marcrelator" valueURI="http://id.loc.gov/vocabulary/relators/cmp">Composer</roleTerm>
+    </role>
+  </name>
+  <subject>
+    <topic authority="lcsh" valueURI="http://id.loc.gov/authorities/subjects/sh85125211">Songs with piano</topic>
+  </subject>
+  <subject>
+    <topic authority="lcsh" valueURI="http://id.loc.gov/authorities/subjects/sh85088865">Popular music</topic>
+  </subject>
+  <subject>
+    <topic authority="lcsh" valueURI="http://id.loc.gov/authorities/subjects/sh85080997">Marches (Piano)</topic>
+  </subject>
+  <relatedItem displayLabel="Project" type="host">
+    <titleInfo>
+      <title>University of Tennessee Sheet Music Collection</title>
+    </titleInfo>
+  </relatedItem>
+  <typeOfResource>notated music</typeOfResource>
+  <typeOfResource>text</typeOfResource>
+  <location>
+    <physicalLocation valueURI="http://id.loc.gov/authorities/names/no2014027633">University of Tennessee, Knoxville. Special Collections</physicalLocation>
+  </location>
+  <recordInfo>
+    <recordContentSource valueURI="http://id.loc.gov/authorities/names/n87808088">University of Tennessee, Knoxville. Libraries</recordContentSource>
+  </recordInfo>
+  <accessCondition type="use and reproduction" xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">No Copyright - United States</accessCondition>
+</mods>
