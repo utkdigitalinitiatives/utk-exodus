@@ -1,2 +1,2 @@
-from .metadata import MetadataMapping, TitleProperty
-__all__ = ['MetadataMapping', 'TitleProperty']
+from .metadata import ExtentProperty, MetadataMapping, TitleProperty
+__all__ = ['ExtentProperty', 'MetadataMapping', 'TitleProperty']

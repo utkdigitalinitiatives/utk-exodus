@@ -1,2 +1,2 @@
-from .base import BaseProperty
-__all__ = ['BaseProperty']
+from .base import BaseProperty, StandardProperty, XMLtoDictProperty
+__all__ = ['BaseProperty', 'StandardProperty', 'XMLtoDictProperty']
