@@ -835,30 +835,31 @@ class LanguageURIProperty(BaseProperty):
 
 
 class ExtentProperty(BaseProperty):
-    def __init__(self, path, namespaces):
+    def __init__(self, path: str, namespaces: dict):
         super().__init__(path, namespaces)
 
     def find(self):
-        no_units = [
+        """Finds and returns a dictionary containing the extent information of a record."""
+        extents_without_units = [
             text.text
             for text in self.root.xpath(
                 "mods:physicalDescription/mods:extent[not(@unit)]",
                 namespaces=self.namespaces,
             )
         ]
-        with_units = [
-            node
+
+        extents_with_units = [
+            f"{node.text} {node.attrib['unit']}"
             for node in self.root.xpath(
                 "mods:physicalDescription/mods:extent[@unit]",
                 namespaces=self.namespaces,
             )
+            if node.text is not None and 'unit' in node.attrib
         ]
-        final_extent = []
-        if len(with_units) > 0:
-            for unit in with_units:
-                final_extent.append(f"{unit.text} {unit.attrib['unit']}")
-        for unit in no_units:
-            final_extent.append(unit)
+
+        # Combine extents with and without units into a single list
+        final_extent = extents_with_units + extents_without_units
+
         return {"extent": final_extent}
 
 
