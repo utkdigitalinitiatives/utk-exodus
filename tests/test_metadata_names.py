@@ -21,7 +21,14 @@ fixtures_path = Path(__file__).parent / "fixtures"
                     "http://id.loc.gov/authorities/names/n78013127",
                 ],
             },
-        }
+        },
+        {
+            "filename": "volvoices_2495.xml",
+            "expected_results": {
+                "utk_associated_name": [""],
+                "utk_photographer": ["unknown"],
+            },
+        },
     ]
 )
 def names_fixture(request):
