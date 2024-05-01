@@ -25,7 +25,7 @@ fixtures_path = Path(__file__).parent / "fixtures"
         {
             "filename": "volvoices_2495.xml",
             "expected_results": {
-                "utk_associated_name": [""],
+                "utk_associated_name": ["Bemis Bro. Bag Company"],
                 "utk_photographer": ["unknown"],
             },
         },
