@@ -1,2 +1,2 @@
-from .metadata import ExtentProperty, GeoNamesProperty, MetadataMapping, NameProperty, PhysicalLocationsProperties, TitleProperty
-__all__ = ['ExtentProperty', 'GeoNamesProperty', 'MetadataMapping', 'NameProperty', 'PhysicalLocationsProperties', 'TitleProperty']
+from .metadata import DataProvider, ExtentProperty, GeoNamesProperty, MachineDate, MetadataMapping, NameProperty, PhysicalLocationsProperties, TitleProperty, TypesProperties
+__all__ = ['DataProvider', 'ExtentProperty', 'GeoNamesProperty', 'MachineDate', 'MetadataMapping', 'NameProperty', 'PhysicalLocationsProperties', 'TitleProperty', 'TypesProperties']
