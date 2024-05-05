@@ -15,6 +15,10 @@ tqdm = "^4.66.2"
 black = "^24.4.2"
 ruff = "^0.4.2"
 pytest = "^8.2.0"
+click = "^8.1.7"
+
+[tool.poetry.scripts]
+iiifnow = "utk_exodus.exodus:cli"
 
 [build-system]
 requires = ["poetry-core"]
