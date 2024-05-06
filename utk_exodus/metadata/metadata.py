@@ -85,11 +85,11 @@ class RoleAndNameProperty(XMLtoDictProperty):
     def __find_all_names(self):
         if "mods:name" in self.doc["mods:mods"]:
             all_names = self.doc["mods:mods"]["mods:name"]
-            if type(all_names) == list:
+            if isinstance(all_names, list):
                 return all_names
-            elif type(all_names) == dict:
+            elif isinstance(all_names, dict):
                 return [all_names]
-            elif type(all_names) == str:
+            elif isinstance(all_names, str):
                 return [all_names]
             else:
                 return ["Problem"]
@@ -115,14 +115,14 @@ class RoleAndNameProperty(XMLtoDictProperty):
             # TODO: Rework this.  It's not pretty but it works.
             name_value = name["mods:namePart"]
             for role in local_roles:
-                if type(name_value) is list:
+                if isinstance(name_value, list):
                     for part in name_value:
-                        if type(part) is dict and part.get("mods:namePart"):
+                        if isinstance(part, dict) and part.get("mods:namePart"):
                             if role not in roles_and_names:
                                 roles_and_names[role] = [part["mods:namePart"]]
                             else:
                                 roles_and_names[role].append([part["mods:namePart"]])
-                        if type(part) is str and not part.startswith("http"):
+                        if  isinstance(part, str) and not part.startswith("http"):
                             if role not in roles_and_names:
                                 roles_and_names[role] = [part]
                             else:
@@ -145,11 +145,11 @@ class NameProperty(XMLtoDictProperty):
     def __find_all_names(self):
         if 'mods:name' in self.doc['mods:mods']:
             all_names = self.doc['mods:mods']['mods:name']
-            if type(all_names) == list:
+            if  isinstance(all_names, list):
                 return all_names
-            elif type(all_names) == dict:
+            elif isinstance(all_names, dict):
                 return [all_names]
-            elif type(all_names) == str:
+            elif isinstance(all_names, str):
                 return [all_names]
             else:
                 return ['Problem']
@@ -184,9 +184,9 @@ class NameProperty(XMLtoDictProperty):
             if '@valueURI' in name:
                 name_value = name['@valueURI']
             for role in roles:
-                if type(name_value) is list:
+                if isinstance(name_value, list):
                     for part in name_value:
-                        if type(part) is dict and '@valueURI' in part:
+                        if isinstance(part, dict) and '@valueURI' in part:
                             if role not in roles_and_names:
                                 roles_and_names[role] = [part['@valueURI']]
                             else:
@@ -196,9 +196,9 @@ class NameProperty(XMLtoDictProperty):
                 elif name_value.startswith('http'):
                     roles_and_names[role].append(name_value)
             for role in local_roles:
-                if type(name_value) is list:
+                if isinstance(name_value, list):
                     for part in name_value:
-                        if type(part) is str and not part.startswith('http'):
+                        if isinstance(part, str) and not part.startswith('http'):
                             if role not in roles_and_names:
                                 roles_and_names[role] = [part]
                             else:
