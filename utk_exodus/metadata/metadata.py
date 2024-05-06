@@ -1006,29 +1006,3 @@ class MetadataMapping:
             for data in self.output_data:
                 writer.writerow(data)
         return
-
-
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Build migration works sheet.")
-    parser.add_argument(
-        "-s", "--sheet", dest="sheet", help="Specify csv to test.", required=True
-    )
-    parser.add_argument(
-        "-c",
-        "--config",
-        dest="config",
-        help="Specify a config.",
-        default="configs/utk_dc.yml",
-    )
-    parser.add_argument(
-        "-p",
-        "--path",
-        dest="path_to_files",
-        help="Specify path to metadata files.",
-        required=True,
-    )
-    args = parser.parse_args()
-    test = MetadataMapping(args.config, args.path_to_files)
-    test.write_csv(args.sheet)
