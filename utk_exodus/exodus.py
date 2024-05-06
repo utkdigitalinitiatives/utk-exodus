@@ -73,3 +73,42 @@ def add_files(
         remote
     )
     x.write_csv(files_sheet)
+
+@cli.command("works_and_files", help="Create import sheet with works and files.")
+@click.option(
+    "--config",
+    "-c",
+    default="data/utk_dc.yml",
+    help="Path to the configuration file for metadata mapping."
+)
+@click.option(
+    "--path",
+    "-p",
+    required=True,
+    help="Path to the directory containing the metadata files."
+)
+@click.option(
+    "--output",
+    "-o",
+    default="delete/works.csv",
+    help="Path to the output file you want to write to."
+)
+@click.option(
+    "--remote",
+    '-r',
+    help="Specify remote address of files",
+    default='https://digital.lib.utk.edu/collections/islandora/object/'
+)
+def works_and_files(config: str, path: str, output: str, remote: str) -> None:
+    print("Generating metadata sheet ...")
+    metadata = MetadataMapping(config, path)
+    metadata.write_csv("tmp/works.csv")
+    print("Grabbing file info ...")
+    x = FileOrganizer(
+        "tmp/works.csv",
+        ['filesets', 'attachments'],
+        remote
+    )
+    x.write_csv(output)
+
+
