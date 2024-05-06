@@ -138,14 +138,13 @@ class NameProperty(XMLtoDictProperty):
     """
     Used for names.
     """
-
     def __init__(self, file):
         super().__init__(file)
         self.all_names = self.__find_all_names()
 
     def __find_all_names(self):
-        if "mods:name" in self.doc["mods:mods"]:
-            all_names = self.doc["mods:mods"]["mods:name"]
+        if 'mods:name' in self.doc['mods:mods']:
+            all_names = self.doc['mods:mods']['mods:name']
             if type(all_names) == list:
                 return all_names
             elif type(all_names) == dict:
@@ -153,7 +152,7 @@ class NameProperty(XMLtoDictProperty):
             elif type(all_names) == str:
                 return [all_names]
             else:
-                return ["Problem"]
+                return ['Problem']
         else:
             return []
 
@@ -163,52 +162,50 @@ class NameProperty(XMLtoDictProperty):
             roles = []
             local_roles = []
             try:
-                roles.append(
-                    name["mods:role"]["mods:roleTerm"]["#text"]
-                    .lower()
-                    .replace(" ", "_")
-                )
-                local_roles.append(
-                    f"utk_{name['mods:role']['mods:roleTerm']['#text'].lower().replace(' ', '_')}"
-                )
+                roles.append(name['mods:role']['mods:roleTerm']['#text'].lower().replace(' ', '_'))
+                local_roles.append(f"utk_{name['mods:role']['mods:roleTerm']['#text'].lower().replace(' ', '_')}")
             except KeyError:
                 print(name)
             # TODO: A name can have multiple roles
             except TypeError:
-                for role in name["mods:role"]:
-                    roles.append(
-                        role["mods:roleTerm"]["#text"].lower().replace(" ", "_")
-                    )
-                    local_roles.append(
-                        f"utk_{role['mods:roleTerm']['#text'].lower().replace(' ', '_')}"
-                    )
+                if isinstance(name['mods:role'], list):
+                    for role in name['mods:role']:
+                        if '#text' in role['mods:roleTerm']:
+                            roles.append(role['mods:roleTerm']['#text'].lower().replace(' ', '_'))
+                            local_roles.append(f"utk_{role['mods:roleTerm']['#text'].lower().replace(' ', '_')}")
+                        else:
+                            roles.append(role['mods:roleTerm'].lower().replace(' ', '_'))
+                            local_roles.append(f"utk_{role['mods:roleTerm'].lower().replace(' ', '_')}")
+                else:
+                    roles.append(name['mods:role']['mods:roleTerm'].lower().replace(' ', '_'))
+                    local_roles.append(f"utk_{name['mods:role']['mods:roleTerm'].lower().replace(' ', '_')}")
             # TODO: Rework this.  It's not pretty but it works.
-            name_value = name["mods:namePart"]
-            if "@valueURI" in name:
-                name_value = name["@valueURI"]
+            name_value = name['mods:namePart']
+            if '@valueURI' in name:
+                name_value = name['@valueURI']
             for role in roles:
                 if type(name_value) is list:
                     for part in name_value:
-                        if type(part) is dict and "@valueURI" in part:
+                        if type(part) is dict and '@valueURI' in part:
                             if role not in roles_and_names:
-                                roles_and_names[role] = [part["@valueURI"]]
+                                roles_and_names[role] = [part['@valueURI']]
                             else:
-                                roles_and_names[role].append([part["@valueURI"]])
-                elif role not in roles_and_names and name_value.startswith("http"):
+                                roles_and_names[role].append([part['@valueURI']])
+                elif role not in roles_and_names and name_value.startswith('http'):
                     roles_and_names[role] = [name_value]
-                elif name_value.startswith("http"):
+                elif name_value.startswith('http'):
                     roles_and_names[role].append(name_value)
             for role in local_roles:
                 if type(name_value) is list:
                     for part in name_value:
-                        if type(part) is str and not part.startswith("http"):
+                        if type(part) is str and not part.startswith('http'):
                             if role not in roles_and_names:
                                 roles_and_names[role] = [part]
                             else:
                                 roles_and_names[role].append(part)
-                elif role not in roles_and_names and not name_value.startswith("http"):
+                elif role not in roles_and_names and not name_value.startswith('http'):
                     roles_and_names[role] = [name_value]
-                elif not name_value.startswith("http"):
+                elif not name_value.startswith('http'):
                     roles_and_names[role].append(name_value)
         return roles_and_names
 
@@ -948,7 +945,7 @@ class MetadataMapping:
             "info:fedora/islandora:sp_videoCModel": "Video",
         }
         x = ResourceIndexSearch().get_islandora_work_type(
-            file.split("/")[-1].replace("_MODS.xml", "").replace(".xml", "")
+            file.split("/")[-1].replace("_MODS.xml", "").replace(".xml", "").replace("_", ":")
         )
         return islandora_types[x]
 
