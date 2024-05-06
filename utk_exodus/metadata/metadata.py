@@ -883,6 +883,7 @@ class MetadataMapping:
 
     def __execute(self, namespaces):
         all_file_data = []
+        all_pages = []
         for file in tqdm(self.all_files):
             # TODO: Ultimately, parents should be populated based on relationship.
             model = self.__dereference_islandora_type(file)
@@ -891,6 +892,7 @@ class MetadataMapping:
                 .replace("_MODS.xml", "")
                 .replace(".xml", ""),
                 "model": model,
+                'sequence': '',
                 "remote_files": "",
                 "parents": " | ".join(
                     ResourceIndexSearch().get_parent_collections(
@@ -926,7 +928,23 @@ class MetadataMapping:
                                 print(f"{TypeError}: {file}")
             self.__find_unique_fieldnames(output_data)
             all_file_data.append(output_data)
+        for item in all_file_data:
+            pages = self.look_for_pages(item)
+            for page in pages:
+                new_page = item.copy()
+                new_page['source_identifier'] = page['pid'].replace('info:fedora/', '')
+                new_page['parents'] = item['source_identifier']
+                new_page['model'] = 'Page'
+                new_page['sequence'] = page['page']
+                all_pages.append(new_page)
+        for page in all_pages:
+            all_file_data.append(page)
         return all_file_data
+
+    def look_for_pages(self, data):
+        if data['model'] == 'Book':
+            return ResourceIndexSearch().find_pages_in_book(data['source_identifier'])
+        return []
 
     def __find_unique_fieldnames(self, data):
         for k, v in data.items():
