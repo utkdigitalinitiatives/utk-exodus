@@ -6,6 +6,37 @@ This application is a complete rewrite of the code used to migrate UTK content f
 
 Unlike the previous code, this aims to be more flexible, easier to understand, and easier to use as a whole.
 
+## Installing
+
+To install, simply:
+
+```shell
+pip install utk_exodus
+```
+
+## Using
+
+There are several interfaces for the application.
+
+If you want to get works and files, use:
+
+```shell
+exodus works_and_files --path /path/to/metadata -o /path/to/directory/to/store/files
+```
+
+If you just want works, use:
+
+```shell
+exodus works --path /path/to/metadata
+```
+
+If for some reason you need to create a files sheet for  works after the fact, use:
+
+```shell
+exodus add_files --sheet path/to/sheet.csv --files_sheet path/to/files_sheet.csv 
+```
+
+
 ## Understanding Configs
 
 Exodus uses `yml` files for migration.  By default, exodus treats everything agnostically and relies on the `xpaths` 
