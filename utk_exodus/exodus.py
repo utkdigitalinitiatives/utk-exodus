@@ -130,4 +130,7 @@ def works_and_files(config: str, path: str, output: str, remote: str, total_size
         attachments_per_sheet=int(total_size),
         multi_sheets="multi"
     )
+    curator.write_works_and_collections_only(
+        f"{output}/{output.split('/')[-1]}_works_and_collections_only.csv"
+    )
     print("Done.")

@@ -28,6 +28,16 @@ class FileCurator:
                         csv_content.append(row)
         return csv_content
 
+    def __get_works_and_collections(self):
+        csv_content = []
+        with open(self.original_csv, 'r') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                if row['model'] != "Attachment" and row['model'] != "FileSet":
+                    csv_content.append(row)
+        return csv_content
+
+
     def __write_sheet(self, filename, values, newline=''):
         with open(filename, 'w', newline=newline) as bulkrax_sheet:
             writer = csv.DictWriter(bulkrax_sheet, fieldnames=self.headers)
@@ -47,6 +57,10 @@ class FileCurator:
         else:
             self.__write_sheet(base_filename, values=self.files_and_attachments)
             return
+
+    def write_works_and_collections_only(self, base_filename):
+        self.__write_sheet(base_filename, values=self.__get_works_and_collections())
+        return
 
 
 if __name__ == "__main__":

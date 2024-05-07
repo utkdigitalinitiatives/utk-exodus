@@ -29,6 +29,13 @@ fixtures_path = Path(__file__).parent / "fixtures"
                 "utk_photographer": ["unknown"],
             },
         },
+        {
+            "filename": "ekcd_50.xml",
+            "expected_results": {
+                'copyright_holder': ['http://id.loc.gov/authorities/names/n79144615'],
+                'utk_creator': ['Kefauver, Estes 1903-1963']
+            }
+        }
     ]
 )
 def names_fixture(request):
