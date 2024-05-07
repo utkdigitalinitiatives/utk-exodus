@@ -153,7 +153,6 @@ class ValidateMigration:
 
 if __name__ == "__main__":
     import argparse
-
     parser = argparse.ArgumentParser(description="Choose sheet to validate..")
     parser.add_argument(
         "-s", "--sheet", dest="sheet", help="Specify csv to test.", required=True
