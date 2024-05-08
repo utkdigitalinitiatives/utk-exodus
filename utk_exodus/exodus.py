@@ -4,6 +4,7 @@ from utk_exodus.finder import FileOrganizer
 from utk_exodus.curate import FileCurator
 from utk_exodus.metadata import MetadataMapping
 from utk_exodus.validate import ValidateMigration
+from utk_exodus.controller import InterfaceController
 import click
 import os
 import requests
@@ -83,9 +84,18 @@ def add_files(sheet: str, files_sheet: str, what_to_add: str, remote: str) -> No
     help="Path to the configuration file for metadata mapping.",
 )
 @click.option(
+    "--collection",
+    "-l",
+    help="The collection you want to download metadata for."
+)
+@click.option(
+    "--model",
+    "-m",
+    help="The model you want to download metadata for."
+)
+@click.option(
     "--path",
     "-p",
-    required=True,
     help="Path to the directory containing the metadata files.",
 )
 @click.option(
@@ -106,31 +116,20 @@ def add_files(sheet: str, files_sheet: str, what_to_add: str, remote: str) -> No
     help="Specify maximum number of attachments and filesets per sheet.",
     default=800,
 )
-def works_and_files(config: str, path: str, output: str, remote: str, total_size: int) -> None:
-    print("Generating metadata sheet ...")
-    os.makedirs(output, exist_ok=True)
-    metadata = MetadataMapping(config, path)
-    os.makedirs("tmp", exist_ok=True)
-    metadata.write_csv("tmp/works.csv")
-    print("Grabbing file info ...")
-    x = FileOrganizer("tmp/works.csv", ["filesets", "attachments"], remote)
-    x.write_csv(f"{output}/{output.split('/')[-1]}.csv")
-    r = requests.get(
-        "https://raw.githubusercontent.com/utkdigitalinitiatives/m3_profiles/main/maps/utk.yml"
-    )
-    with open("tmp/m3.yml", "wb") as f:
-        f.write(r.content)
-    print("Validating import ...")
-    validator = ValidateMigration(profile="tmp/m3.yml", migration_sheet=f"{output}/{output.split('/')[-1]}.csv")
-    validator.iterate()
-    print("Curating filesets and attachments ...")
-    curator = FileCurator(f"{output}/{output.split('/')[-1]}.csv")
-    curator.write_files_and_attachments_only(
-        f"{output}/{output.split('/')[-1]}.csv_filesheets_and_attachments_only.csv",
-        attachments_per_sheet=int(total_size),
-        multi_sheets="multi"
-    )
-    curator.write_works_and_collections_only(
-        f"{output}/{output.split('/')[-1]}_works_and_collections_only.csv"
-    )
-    print("Done.")
+def works_and_files(
+        collection: str,
+        config: str,
+        model: str,
+        path: str,
+        output: str,
+        remote: str,
+        total_size: int
+) -> None:
+    if model and collection:
+        interface = InterfaceController(config, output, remote, total_size)
+        interface.download_mods(collection, model)
+    elif path:
+        interface = InterfaceController(config, output, remote, total_size)
+        interface.build_import_from_directory(path)
+    else:
+        print("You must specify either a path to a directory or both a collection and model.")

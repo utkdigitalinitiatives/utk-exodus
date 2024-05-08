@@ -165,10 +165,33 @@ class ResourceIndexSearch:
                 )
         return all_pages
 
+    @staticmethod
+    def __lookup_work_type(work_type):
+        work_types = {
+            "book": "info:fedora/islandora:bookCModel",
+            "image": "info:fedora/islandora:sp_basic_image",
+            "compound": "info:fedora/islandora:compoundCModel",
+            "audio": "info:fedora/islandora:sp-audioCModel",
+            "video": "info:fedora/islandora:sp_videoCModel",
+            "pdf": "info:fedora/islandora:sp_pdf",
+        }
+        return work_types.get(work_type, "unknown")
+
+    def get_works_based_on_type_and_collection(self, work_type, collection):
+        iri = self.__lookup_work_type(work_type).strip()
+        query = quote(
+            f"PREFIX rels-ext: <info:fedora/fedora-system:def/relations-external#>"
+            f"PREFIX model: <info:fedora/fedora-system:def/model#>"
+            f"SELECT ?pid WHERE {{ ?pid rels-ext:isMemberOfCollection <info:fedora/{collection}> ;"
+            f"model:hasModel <{iri}> ."
+            f"}}"
+        )
+        results = requests.get(f"{self.base_url}&query={query}").content.decode("utf-8")
+        return [result for result in results.split("\n") if result != "" and result != '"pid"']
+
 
 if __name__ == "__main__":
     import argparse
-
     parser = argparse.ArgumentParser(description="Find things to download.")
     parser.add_argument(
         "-c",
