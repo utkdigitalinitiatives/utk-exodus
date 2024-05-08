@@ -83,7 +83,7 @@ class InterfaceController:
                     os.environ.get("FEDORA_USERNAME"),
                     os.environ.get("FEDORA_PASSWORD"),
                 ),
-                fedora_uri="http://localhost:8080/fedora",
+                fedora_uri=os.environ.get("FEDORA_URI"),
                 pid=f"{record.replace('info:fedora/', '').strip()}",
             )
             fedora.getDatastream(
