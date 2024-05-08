@@ -86,11 +86,15 @@ def add_files(sheet: str, files_sheet: str, what_to_add: str, remote: str) -> No
 @click.option(
     "--collection",
     "-l",
-    help="The collection you want to download metadata for."
+    help="Specify the collection you want to download metadata for."
 )
 @click.option(
     "--model",
     "-m",
+    type=click.Choice(
+        ['book', 'image', 'pdf', 'audio', 'video'],
+        case_sensitive=False
+    ),
     help="The model you want to download metadata for."
 )
 @click.option(

@@ -145,10 +145,10 @@ class ValidateMigration:
         separator = "\n"
         if len(self.all_exceptions) > 0:
             raise Exception(
-                f"Migration spreadsheet has at least {len(self.all_exceptions)} problems: {separator.join(self.all_exceptions)}"
+                f"\tMigration spreadsheet has at least {len(self.all_exceptions)} problems: {separator.join(self.all_exceptions)}"
             )
         else:
-            print("Sheet passes all tests.")
+            print("\tSheet passes all tests.")
 
 
 if __name__ == "__main__":

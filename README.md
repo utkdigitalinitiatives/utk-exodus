@@ -27,10 +27,17 @@ pip install utk_exodus
 
 There are several interfaces for the application.
 
-If you want to get works and files, use:
+If you want to get works and files, and you have metadata files, use::
 
 ```shell
 exodus works_and_files --path /path/to/metadata -o /path/to/directory/to/store/files
+```
+
+If you want to get works and files, and you don't have metadata files, you need to specify
+a collection and a work type:
+
+```shell
+exodus works_and_files --collection "namespace:identifier" --model book -o /path/to/output/directory
 ```
 
 If you just want works, use:

@@ -1,3 +1,4 @@
+import click
 import os
 import requests
 import shutil
@@ -17,7 +18,13 @@ class InterfaceController:
         self.total_size = total_size
 
     def __curate_filesets_and_attachments(self):
-        print("Curating filesets and attachments ...")
+        click.echo(
+            click.style(
+                "Curating filesets and attachments ...",
+                fg='magenta',
+                bold=True
+            )
+        )
         curator = FileCurator(f"{self.output}/{self.output.split('/')[-1]}.csv")
         curator.write_files_and_attachments_only(
             f"{self.output}/{self.output.split('/')[-1]}.csv_filesheets_and_attachments_only.csv",
@@ -30,7 +37,13 @@ class InterfaceController:
         return
 
     def __generate_metadata_sheet(self, path):
-        print("Generating metadata sheet ...")
+        click.echo(
+            click.style(
+                "Generating metadata sheet ...",
+                fg='green',
+                bold=True
+            )
+        )
         os.makedirs(self.output, exist_ok=True)
         metadata = MetadataMapping(self.config, path)
         os.makedirs("tmp", exist_ok=True)
@@ -38,14 +51,26 @@ class InterfaceController:
         return
 
     def __get_mods(self, collection, work_type):
-        print("Finding MODS files ...")
+        click.echo(
+            click.style(
+                "Finding MODS files ...",
+                fg='red',
+                bold=True
+            )
+        )
         risearch = ResourceIndexSearch().get_works_based_on_type_and_collection(
             work_type, collection
         )
         return risearch
 
     def __grab_file_info(self):
-        print("Grabbing file info ...")
+        click.echo(
+            click.style(
+                "Grabbing file info ...",
+                fg='yellow',
+                bold=True
+            )
+        )
         x = FileOrganizer("tmp/works.csv", ["filesets", "attachments"], self.remote)
         x.write_csv(f"{self.output}/{self.output.split('/')[-1]}.csv")
         r = requests.get(
@@ -56,7 +81,13 @@ class InterfaceController:
         return
 
     def __validate_import(self):
-        print("Validating import ...")
+        click.echo(
+            click.style(
+                "Validating import ...",
+                fg='blue',
+                bold=True
+            )
+        )
         validator = ValidateMigration(
             profile="tmp/m3.yml",
             migration_sheet=f"{self.output}/{self.output.split('/')[-1]}.csv",
@@ -69,7 +100,13 @@ class InterfaceController:
         self.__grab_file_info()
         self.__validate_import()
         self.__curate_filesets_and_attachments()
-        print("Done.")
+        click.echo(
+            click.style(
+                "Done ...",
+                fg='cyan',
+                bold=True
+            )
+        )
         return
 
     def download_mods(self, collection, work_type):
@@ -94,5 +131,11 @@ class InterfaceController:
         self.__grab_file_info()
         self.__validate_import()
         self.__curate_filesets_and_attachments()
-        print("Done.")
+        click.echo(
+            click.style(
+                "Done ...",
+                fg='cyan',
+                bold=True
+            )
+        )
         return
