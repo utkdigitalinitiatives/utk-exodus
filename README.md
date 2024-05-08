@@ -8,7 +8,16 @@ Unlike the previous code, this aims to be more flexible, easier to understand, a
 
 ## Installing
 
-To install, simply:
+To install for use, ideally use `pipx`:
+
+```shell
+pipx install utk_exodus
+```
+
+The above will install the application in a virtual environment and make it available to you where ever you are in your
+path so you can use it from anywhere without needing to understand the intricacies of Python. 
+
+If you don't want to use `pipx`, you can install the whole library with the following command but do so mindfully:
 
 ```shell
 pip install utk_exodus
