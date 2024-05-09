@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "utk-exodus"
-version = "0.1.4"
+version = "0.1.5"
 description = "A tool for building import sheets from UTK legacy systems"
 authors = ["Mark Baggett <mbagget1@utk.edu>"]
 readme = "README.md"
@@ -19,6 +19,7 @@ black = "^24.4.2"
 ruff = "^0.4.2"
 pytest = "^8.2.0"
 click = "^8.1.7"
+six = "^1.16.0"
 
 [tool.poetry.scripts]
 exodus = "utk_exodus.exodus:cli"
