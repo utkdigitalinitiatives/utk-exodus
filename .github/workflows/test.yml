@@ -22,11 +22,5 @@ jobs:
           poetry-version: ${{ matrix.poetry-version }}
       - name: Install application
         run: poetry install
-      - uses: pavelzw/pytest-action@v2
-        with:
-          verbose: true
-          emoji: true
-          job-summary: true
-          custom-arguments: '-vv'
-          click-to-expand: true
-          report-title: 'Test Report'
+      - name: Run tests
+        run: poetry run pytest
