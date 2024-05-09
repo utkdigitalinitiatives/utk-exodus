@@ -8,21 +8,31 @@ from utk_exodus.curate import FileCurator
 from utk_exodus.metadata import MetadataMapping
 from utk_exodus.risearch import ResourceIndexSearch
 from utk_exodus.validate import ValidateMigration
+from pathlib import Path
 
 
 class InterfaceController:
     def __init__(self, config, output, remote, total_size):
-        self.config = config
+        self.config = self.__load_config(config)
         self.output = output
         self.remote = remote
         self.total_size = total_size
 
+    @staticmethod
+    def __load_config(config):
+        configs = {
+            "utk_dc": "utk_dc.yml",
+            "samvera": "samvera_default.yml",
+            "utk_dc_no_uris": "utk_dc_no_uris.yml",
+            "utk_dc_no_uris_or_names": "utk_no_uris_no_names.yml",
+        }
+        config_path = Path(__file__).parent / "../config"
+        return config_path / configs.get(config)
+
     def __curate_filesets_and_attachments(self):
         click.echo(
             click.style(
-                "Curating filesets and attachments ...",
-                fg='magenta',
-                bold=True
+                "Curating filesets and attachments ...", fg="magenta", bold=True
             )
         )
         curator = FileCurator(f"{self.output}/{self.output.split('/')[-1]}.csv")
@@ -37,13 +47,7 @@ class InterfaceController:
         return
 
     def __generate_metadata_sheet(self, path):
-        click.echo(
-            click.style(
-                "Generating metadata sheet ...",
-                fg='green',
-                bold=True
-            )
-        )
+        click.echo(click.style("Generating metadata sheet ...", fg="green", bold=True))
         os.makedirs(self.output, exist_ok=True)
         metadata = MetadataMapping(self.config, path)
         os.makedirs("tmp", exist_ok=True)
@@ -51,26 +55,14 @@ class InterfaceController:
         return
 
     def __get_mods(self, collection, work_type):
-        click.echo(
-            click.style(
-                "Finding MODS files ...",
-                fg='red',
-                bold=True
-            )
-        )
+        click.echo(click.style("Finding MODS files ...", fg="red", bold=True))
         risearch = ResourceIndexSearch().get_works_based_on_type_and_collection(
             work_type, collection
         )
         return risearch
 
     def __grab_file_info(self):
-        click.echo(
-            click.style(
-                "Grabbing file info ...",
-                fg='yellow',
-                bold=True
-            )
-        )
+        click.echo(click.style("Grabbing file info ...", fg="yellow", bold=True))
         x = FileOrganizer("tmp/works.csv", ["filesets", "attachments"], self.remote)
         x.write_csv(f"{self.output}/{self.output.split('/')[-1]}.csv")
         r = requests.get(
@@ -81,13 +73,7 @@ class InterfaceController:
         return
 
     def __validate_import(self):
-        click.echo(
-            click.style(
-                "Validating import ...",
-                fg='blue',
-                bold=True
-            )
-        )
+        click.echo(click.style("Validating import ...", fg="blue", bold=True))
         validator = ValidateMigration(
             profile="tmp/m3.yml",
             migration_sheet=f"{self.output}/{self.output.split('/')[-1]}.csv",
@@ -100,13 +86,7 @@ class InterfaceController:
         self.__grab_file_info()
         self.__validate_import()
         self.__curate_filesets_and_attachments()
-        click.echo(
-            click.style(
-                "Done ...",
-                fg='cyan',
-                bold=True
-            )
-        )
+        click.echo(click.style("Done ...", fg="cyan", bold=True))
         return
 
     def download_mods(self, collection, work_type):
@@ -131,11 +111,5 @@ class InterfaceController:
         self.__grab_file_info()
         self.__validate_import()
         self.__curate_filesets_and_attachments()
-        click.echo(
-            click.style(
-                "Done ...",
-                fg='cyan',
-                bold=True
-            )
-        )
+        click.echo(click.style("Done ...", fg="cyan", bold=True))
         return

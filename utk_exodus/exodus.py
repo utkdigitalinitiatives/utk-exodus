@@ -19,7 +19,7 @@ def cli() -> None:
 @click.option(
     "--config",
     "-c",
-    default="data/utk_dc.yml",
+    default="config/utk_dc.yml",
     help="Path to the configuration file for metadata mapping.",
 )
 @click.option(
@@ -80,22 +80,23 @@ def add_files(sheet: str, files_sheet: str, what_to_add: str, remote: str) -> No
 @click.option(
     "--config",
     "-c",
-    default="data/utk_dc.yml",
-    help="Path to the configuration file for metadata mapping.",
+    default="utk_dc",
+    type=click.Choice(
+        ["utk_dc", "samvera", "utk_dc_no_uris", "utk_dc_no_uris_or_names"],
+        case_sensitive=False,
+    ),
+    help="The configuration you want to use. By default, utk_dc.",
 )
 @click.option(
     "--collection",
     "-l",
-    help="Specify the collection you want to download metadata for."
+    help="Specify the collection you want to download metadata for.",
 )
 @click.option(
     "--model",
     "-m",
-    type=click.Choice(
-        ['book', 'image', 'pdf', 'audio', 'video'],
-        case_sensitive=False
-    ),
-    help="The model you want to download metadata for."
+    type=click.Choice(["book", "image", "pdf", "audio", "video"], case_sensitive=False),
+    help="The model you want to download metadata for.",
 )
 @click.option(
     "--path",
@@ -121,13 +122,13 @@ def add_files(sheet: str, files_sheet: str, what_to_add: str, remote: str) -> No
     default=800,
 )
 def works_and_files(
-        collection: str,
-        config: str,
-        model: str,
-        path: str,
-        output: str,
-        remote: str,
-        total_size: int
+    collection: str,
+    config: str,
+    model: str,
+    path: str,
+    output: str,
+    remote: str,
+    total_size: int,
 ) -> None:
     if model and collection:
         interface = InterfaceController(config, output, remote, total_size)
@@ -136,4 +137,6 @@ def works_and_files(
         interface = InterfaceController(config, output, remote, total_size)
         interface.build_import_from_directory(path)
     else:
-        print("You must specify either a path to a directory or both a collection and model.")
+        print(
+            "You must specify either a path to a directory or both a collection and model."
+        )

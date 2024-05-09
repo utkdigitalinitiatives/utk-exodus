@@ -1,9 +1,12 @@
 [tool.poetry]
 name = "utk-exodus"
-version = "0.1.3"
+version = "0.1.4"
 description = "A tool for building import sheets from UTK legacy systems"
 authors = ["Mark Baggett <mbagget1@utk.edu>"]
 readme = "README.md"
+include = [
+    { path = "utk_exodus/config", format = ["sdist", "wheel"] }
+]
 
 [tool.poetry.dependencies]
 python = "^3.8 || ^3.9 || ^3.10 || ^3.11 || ^3.12"
