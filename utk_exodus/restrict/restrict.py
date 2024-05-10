@@ -117,8 +117,3 @@ class RestrictionsSheet:
         return
 
 
-if __name__ == "__main__":
-    x = RestrictionsSheet(
-        "imports/bass/bass.csv", "tmp/policy_downloads/current_collection"
-    )
-    x.write_csv("tmp/bass_visibility.csv")
