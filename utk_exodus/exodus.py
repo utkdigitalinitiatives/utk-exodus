@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 
 from utk_exodus.finder import FileOrganizer
-from utk_exodus.curate import FileCurator
 from utk_exodus.metadata import MetadataMapping
 from utk_exodus.validate import ValidateMigration
 from utk_exodus.controller import InterfaceController
 import click
-import os
 import requests
 
 
