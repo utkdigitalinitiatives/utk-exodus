@@ -1,5 +1,4 @@
 import csv
-import requests
 from tqdm import tqdm
 from utk_exodus.risearch import ResourceIndexSearch
 
