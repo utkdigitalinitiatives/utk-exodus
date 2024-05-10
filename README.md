@@ -64,7 +64,6 @@ exodus add_files --sheet path/to/sheet.csv --files_sheet path/to/files_sheet.csv
 
 ## What's Missing Here Right Now
 
-* Appropriate application of restrictions
 * The ability to create pcdm:Collection objects.
 * The ability to create a new metadata import from a previous import
 

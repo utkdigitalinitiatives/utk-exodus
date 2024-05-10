@@ -1,4 +1,7 @@
 import xml.etree.ElementTree as ET
+import csv
+from tqdm import tqdm
+import os
 
 
 class Restrictions:
@@ -58,3 +61,64 @@ class Restrictions:
             "work_restricted": self.determine_if_work_restricted(),
             "restricted_datastreams": self.find_restricted_datastreams(),
         }
+
+
+class RestrictionsSheet:
+    def __init__(self, original_sheet, policies_location):
+        self.original_sheet = original_sheet
+        self.policies_location = policies_location
+        self.original_as_dict = self.__read(original_sheet)
+        self.headers = self.__get_headers()
+        self.rows_with_visibility = self.add_visibility()
+
+    @staticmethod
+    def __read(csv_file):
+        csv_content = []
+        with open(csv_file, "r") as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                csv_content.append(row)
+        return csv_content
+
+    def __get_headers(self):
+        original_headers = [k for k, v in self.original_as_dict[0].items()]
+        original_headers.append("visibility")
+        return original_headers
+
+    def add_visibility(self):
+        new_csv_content = []
+        for row in tqdm(self.original_as_dict):
+            pid = row["source_identifier"].split("_")[0]
+            datastream = None
+            visibility = "open"
+            if len(row["source_identifier"].split("_")) > 1:
+                datastream = row["source_identifier"].split("_")[1]
+            if os.path.exists(f"{self.policies_location}/{pid}_POLICY.xml"):
+                restrictions = Restrictions(
+                    f"{self.policies_location}/{pid}_POLICY.xml"
+                ).get()
+                if restrictions["work_restricted"]:
+                    visibility = "restricted"
+                elif datastream in restrictions["restricted_datastreams"]:
+                    visibility = "restricted"
+            current_data = {}
+            for k, v in row.items():
+                current_data[k] = v
+            current_data["visibility"] = visibility
+            new_csv_content.append(current_data)
+        return new_csv_content
+
+    def write_csv(self, filename):
+        with open(filename, "w", newline="") as bulkrax_sheet:
+            writer = csv.DictWriter(bulkrax_sheet, fieldnames=self.headers)
+            writer.writeheader()
+            for data in self.rows_with_visibility:
+                writer.writerow(data)
+        return
+
+
+if __name__ == "__main__":
+    x = RestrictionsSheet(
+        "imports/bass/bass.csv", "tmp/policy_downloads/current_collection"
+    )
+    x.write_csv("tmp/bass_visibility.csv")
