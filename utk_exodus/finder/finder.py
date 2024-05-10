@@ -45,7 +45,7 @@ class FileOrganizer:
         }
         if parent != "":
             initial_data['parents'] = parent
-        if preserve_and_obj == True and filename == "OBJ" and row['model'] == "Pdf":
+        if preserve_and_obj is True and filename == "OBJ" and row['model'] == "Pdf":
             initial_data['parents'] = f"{row['source_identifier'].replace('.xml', '')}"
         if row['model'] == "Pdf" and filename in ("OBJ", "PDFA"):
             initial_data['remote_files'] = f"https://digital.lib.utk.edu/collections/islandora/object/{row['source_identifier'].replace('_MODS.xml', '').replace('_', ':').replace('.xml', '')}/datastream/{filename}/view.pdf"
