@@ -174,6 +174,7 @@ class ResourceIndexSearch:
             "audio": "info:fedora/islandora:sp-audioCModel",
             "video": "info:fedora/islandora:sp_videoCModel",
             "pdf": "info:fedora/islandora:sp_pdf",
+            "page": "info:fedora/islandora:pageCModel",
         }
         return work_types.get(work_type, "unknown")
 
@@ -189,22 +190,45 @@ class ResourceIndexSearch:
         results = requests.get(f"{self.base_url}&query={query}").content.decode("utf-8")
         return [result for result in results.split("\n") if result != "" and result != '"pid"']
 
+    def get_policies_for_pages_in_book(self, book):
+        query = quote(
+            f"PREFIX system: <info:fedora/fedora-system:def/view#>"
+            f"PREFIX rels-ext: <info:fedora/fedora-system:def/relations-external#>"
+            f"PREFIX model: <info:fedora/fedora-system:def/model#>"
+            f"SELECT ?pid WHERE {{"
+            f"?pid system:disseminates ?o ;"
+            f"rels-ext:isMemberOf <{book}> ;"
+            f"model:hasModel <info:fedora/islandora:pageCModel> ."
+            f"FILTER(REGEX(STR(?o), 'POLICY')).}}"
+        )
+        results = requests.get(f"{self.base_url}&query={query}").content.decode("utf-8")
+        return [result for result in results.split("\n") if result != "" and result != '"pid"']
+
+    def get_policies_based_on_type_and_collection(self, work_type, collection):
+        iri = self.__lookup_work_type(work_type).strip()
+        query = quote(
+            f"PREFIX system: <info:fedora/fedora-system:def/view#>"
+            f"PREFIX rels-ext: <info:fedora/fedora-system:def/relations-external#>"
+            f"PREFIX model: <info:fedora/fedora-system:def/model#>"
+            f"SELECT ?pid WHERE {{"
+            f"?pid system:disseminates ?o ;"
+            f"rels-ext:isMemberOfCollection <info:fedora/{collection}> ;"
+            f"model:hasModel <{iri}> ."
+            f"FILTER(REGEX(STR(?o), 'POLICY')).}}"
+        )
+        results = requests.get(f"{self.base_url}&query={query}").content.decode("utf-8")
+        if work_type != "book":
+            return [result for result in results.split("\n") if result != "" and result != '"pid"']
+        else:
+            all_policies_from_book = []
+            books = [result for result in results.split("\n") if result != "" and result != '"pid"']
+            for book in books:
+                all_policies_from_book.append(book)
+                all_policies_from_book.extend(self.get_policies_for_pages_in_book(book))
+            return all_policies_from_book
+
 
 if __name__ == "__main__":
-    import argparse
-    parser = argparse.ArgumentParser(description="Find things to download.")
-    parser.add_argument(
-        "-c",
-        "--sheet",
-        dest="collection",
-        help="Specify collection pid.",
-        required=True,
-    )
-    parser.add_argument(
-        "-o", "--output_file", dest="output", help="Specify output file.", required=True
-    )
-    args = parser.parse_args()
-    results = ResourceIndexSearch().get_images_no_parts(args.collection)
-    with open(args.output, "w") as all_results:
-        for result in results:
-            all_results.write(f"{result}\n")
+    risearch = ResourceIndexSearch()
+    x = risearch.get_policies_based_on_type_and_collection("book", "collections:galston")
+    print(x)
