@@ -5,7 +5,7 @@ from .curate import FileCurator
 from .validate import ValidateMigration
 from .fedora import FedoraObject
 from .controller import InterfaceController
-from .restrict import Restrictions
+from .restrict import Restrictions, RestrictionsSheet
 
 __all__ = [
     "FedoraObject",
@@ -15,5 +15,6 @@ __all__ = [
     "MetadataMapping",
     "ResourceIndexSearch",
     "Restrictions",
+    "RestrictionsSheet",
     "ValidateMigration",
 ]
