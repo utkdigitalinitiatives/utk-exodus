@@ -26,3 +26,5 @@ jobs:
         run: poetry run pytest
       - name: Ruff check
         run: poetry run ruff check
+      - name: Test docstrings
+        run: poetry run pytest --doctest-modules
