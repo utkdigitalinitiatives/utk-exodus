@@ -850,8 +850,9 @@ class ExtentProperty(BaseProperty):
             dict: A dictionary containing the extent information.
 
         Examples:
-            >>> extent_property = ExtentProperty("knoxgardens_125.xml", {"mods": "http://www.loc.gov/mods/v3"})
-            {"extent": ["3 1/4 x 5 inches"]}
+            >>> extent_property = ExtentProperty("tests/fixtures/knoxgardens_125.xml", {"mods": "http://www.loc.gov/mods/v3"})
+            >>> extent_property.find()
+            {'extent': ['3 1/4 x 5 inches']}
 
         """
         extents_without_units = [
