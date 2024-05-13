@@ -57,6 +57,18 @@ class TitleProperty(BaseProperty):
         ]
 
     def find(self):
+        """
+        Handles the mapping of different types of titles based on the provided XML data.
+
+        Returns:
+            dict: A dictionary containing the mapped titles.
+
+        Example:
+             >>> titles = TitleProperty("tests/fixtures/utsmc_17870.xml", {"mods": "http://www.loc.gov/mods/v3"})
+             >>> titles.find()
+             ... #doctest: +NORMALIZE_WHITESPACE
+             {'title': ['Prussian heroes march'], 'alternative_title': ['Prussian heroes: Prussen helden march']}
+        """
         titles = []
         alternatives = []
         titles_data = self.various_titles
@@ -97,6 +109,18 @@ class RoleAndNameProperty(XMLtoDictProperty):
             return []
 
     def find(self):
+        """
+        Find all names and roles in the XML file.
+
+        Returns:
+            dict: A dictionary containing the roles and names.
+
+        Examples:
+            >>> roles_and_names = RoleAndNameProperty("tests/fixtures/harp_1.xml")
+            >>> roles_and_names.find()
+            {'utk_composer': ['Swan, W. H. (William H.)', 'Swan, Marcus Lafayette'], 'utk_compiler': ['Swan, W. H. (William H.)', 'Swan, Marcus Lafayette']}
+
+        """
         roles_and_names = {}
         for name in self.all_names:
             local_roles = []
@@ -157,6 +181,17 @@ class NameProperty(XMLtoDictProperty):
             return []
 
     def find(self):
+        """
+        Find all names in the XML file.
+
+        Returns:
+            dict: A dictionary containing the names.
+
+        Examples:
+            >>> names = NameProperty("tests/fixtures/harp_1.xml")
+            >>> names.find()
+            {'composer': ['http://id.loc.gov/authorities/names/no2002022963', 'http://id.loc.gov/authorities/names/n78013127'], 'compiler': ['http://id.loc.gov/authorities/names/no2002022963', 'http://id.loc.gov/authorities/names/n78013127']}
+        """
         roles_and_names = {}
         for name in self.all_names:
             roles = []
@@ -211,10 +246,31 @@ class NameProperty(XMLtoDictProperty):
 
 
 class GeoNamesProperty(BaseProperty):
+    """
+    Handles the mapping of different types of geonames based on the provided XML data.
+
+    Args:
+        path (str): The path to the XML file.
+        namespaces (dict): A dictionary containing the namespaces used in the XML file.
+    """
     def __init__(self, path, namespaces):
         super().__init__(path, namespaces)
 
     def find(self, name):
+        """
+        Find all geonames in the XML file.
+
+        Args:
+            name (str): The name of the geoname.
+
+        Returns:
+            dict: A dictionary containing the geoname mappings.
+
+        Examples:
+            >>> geonames = GeoNamesProperty("tests/fixtures/webster_1127.xml", {"mods": "http://www.loc.gov/mods/v3"})
+            >>> geonames.find("spatial")
+            {'spatial': ['http://sws.geonames.org/4050810', 'http://sws.geonames.org/4609260', 'http://id.loc.gov/authorities/subjects/sh85057008']}
+        """
         uris = [
             uri.replace("about.rdf", "")
             for uri in self.root.xpath(
@@ -832,11 +888,29 @@ class LanguageURIProperty(BaseProperty):
 
 
 class ExtentProperty(BaseProperty):
+    """
+    Class to Handle Extent Information.
+
+    Args:
+        path (str): The path to the file.
+        namespaces (dict): Namespaces to be used in the XPath queries.
+    """
     def __init__(self, path: str, namespaces: dict):
         super().__init__(path, namespaces)
 
     def find(self):
-        """Finds and returns a dictionary containing the extent information of a record."""
+        """
+        Finds and returns a dictionary containing the extent information of a record.
+
+        Returns:
+            dict: A dictionary containing the extent information.
+
+        Examples:
+            >>> extent_property = ExtentProperty("tests/fixtures/knoxgardens_125.xml", {"mods": "http://www.loc.gov/mods/v3"})
+            >>> extent_property.find()
+            {'extent': ['3 1/4 x 5 inches']}
+
+        """
         extents_without_units = [
             text.text
             for text in self.root.xpath(
@@ -981,39 +1055,41 @@ class MetadataMapping:
 
     @staticmethod
     def __lookup_special_property(special_property, file, namespaces, name):
-        match special_property:
-            case "TitleProperty":
-                return TitleProperty(file, namespaces).find()
-            case "NameProperty":
-                return NameProperty(file).find()
-            case "RoleAndNameProperty":
-                return RoleAndNameProperty(file).find()
-            case "GeoNamesProperty":
-                return GeoNamesProperty(file, namespaces).find(name)
-            case "DataProvider":
-                return DataProvider(file, namespaces).find()
-            case "PhysicalLocationsProperties":
-                return PhysicalLocationsProperties(file, namespaces).find()
-            case "SubjectProperty":
-                return SubjectProperty(file, namespaces).find_topic()
-            case "KeywordProperty":
-                return KeywordProperty(file, namespaces).find_topic()
-            case "TypesProperties":
-                return TypesProperties(file, namespaces).find()
-            case "LocalTypesProperties":
-                return LocalTypesProperties(file, namespaces).find()
-            case "LanguageURIProperty":
-                return LanguageURIProperty(file, namespaces).find_term()
-            case "PublisherProperty":
-                return PublisherProperty(file, namespaces).find()
-            case "PublicationPlaceProperty":
-                return PublicationPlaceProperty(file, namespaces).find()
-            case "RightsOrLicenseProperties":
-                return RightsOrLicenseProperties(file, namespaces).find()
-            case "ExtentProperty":
-                return ExtentProperty(file, namespaces).find()
-            case "MachineDate":
-                return MachineDate(file, namespaces).find()
+        if special_property == "TitleProperty":
+            return TitleProperty(file, namespaces).find()
+        elif special_property == "NameProperty":
+            return NameProperty(file).find()
+        elif special_property == "RoleAndNameProperty":
+            return RoleAndNameProperty(file).find()
+        elif special_property == "GeoNamesProperty":
+            return GeoNamesProperty(file, namespaces).find(name)
+        elif special_property == "DataProvider":
+            return DataProvider(file, namespaces).find()
+        elif special_property == "PhysicalLocationsProperties":
+            return PhysicalLocationsProperties(file, namespaces).find()
+        elif special_property == "SubjectProperty":
+            return SubjectProperty(file, namespaces).find_topic()
+        elif special_property == "KeywordProperty":
+            return KeywordProperty(file, namespaces).find_topic()
+        elif special_property == "TypesProperties":
+            return TypesProperties(file, namespaces).find()
+        elif special_property == "LocalTypesProperties":
+            return LocalTypesProperties(file, namespaces).find()
+        elif special_property == "LanguageURIProperty":
+            return LanguageURIProperty(file, namespaces).find_term()
+        elif special_property == "PublisherProperty":
+            return PublisherProperty(file, namespaces).find()
+        elif special_property == "PublicationPlaceProperty":
+            return PublicationPlaceProperty(file, namespaces).find()
+        elif special_property == "RightsOrLicenseProperties":
+            return RightsOrLicenseProperties(file, namespaces).find()
+        elif special_property == "ExtentProperty":
+            return ExtentProperty(file, namespaces).find()
+        elif special_property == "MachineDate":
+            return MachineDate(file, namespaces).find()
+        else:
+            # Handle unknown special property
+            raise ValueError(f"Unknown special property: {special_property}")
 
     def write_csv(self, filename):
         with open(filename, "w", newline="") as bulkrax_sheet:
