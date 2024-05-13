@@ -119,7 +119,6 @@ class RoleAndNameProperty(XMLtoDictProperty):
             >>> roles_and_names = RoleAndNameProperty("tests/fixtures/harp_1.xml")
             >>> roles_and_names.find()
             {'utk_composer': ['Swan, W. H. (William H.)', 'Swan, Marcus Lafayette'], 'utk_compiler': ['Swan, W. H. (William H.)', 'Swan, Marcus Lafayette']}
-
         """
         roles_and_names = {}
         for name in self.all_names:
@@ -267,7 +266,10 @@ class GeoNamesProperty(BaseProperty):
             dict: A dictionary containing the geoname mappings.
 
         Examples:
-            >>> geonames = GeoNamesProperty("tests/fixtures/webster_1127.xml", {"mods": "http://www.loc.gov/mods/v3"})
+            >>> NAMESPACES = {
+            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'xlink': 'http://www.w3.org/1999/xlink' }
+            >>> geonames = GeoNamesProperty("tests/fixtures/webster_1127.xml", NAMESPACES)
             >>> geonames.find("spatial")
             {'spatial': ['http://sws.geonames.org/4050810', 'http://sws.geonames.org/4609260', 'http://id.loc.gov/authorities/subjects/sh85057008']}
         """
@@ -323,6 +325,20 @@ class PhysicalLocationsProperties(BaseProperty):
         return all_repositories
 
     def find(self):
+        """
+        Find all locations properties in the XML file.
+
+        Returns:
+            dict: A dictionary containing location properties.
+
+        Examples:
+            >>> NAMESPACES = {
+            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'xlink': 'http://www.w3.org/1999/xlink' }
+            >>> physical_location = PhysicalLocationsProperties("tests/fixtures/civilwar_1438.xml", NAMESPACES)
+            >>> physical_location.find()
+            {'repository': ['University of Tennessee, Knoxville. Special Collections'], 'archival_collection': ['O. P. Temple Papers,1862']}
+        """
         return {
             "repository": self.__find_repositories(),
             "archival_collection": self.__find_archival_collections(),
@@ -374,6 +390,20 @@ class DataProvider(BaseProperty):
         super().__init__(path, namespaces)
 
     def find(self):
+        """
+        Find all data providers in the XML file.
+
+        Returns:
+            dict: A dictionary containing data provider information.
+
+        Examples:
+            >>> NAMESPACES = {
+            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'xlink': 'http://www.w3.org/1999/xlink' }
+            >>> dataProvider = DataProvider("tests/fixtures/egypt_224.xml", NAMESPACES)
+            >>> dataProvider.find()
+            {'provider': ['University of Tennessee, Knoxville. Libraries'], 'intermediate_provider': ['Frank H. McClung Museum of Natural History and Culture']}
+        """
         values = [
             value.text
             for value in self.root.xpath(
@@ -395,6 +425,20 @@ class MachineDate(BaseProperty):
         super().__init__(path, namespaces)
 
     def find(self):
+        """
+        Find all machine date information in the XML file.
+
+        Returns:
+            dict: A dictionary containing machine date information.
+
+        Examples:
+            >>> NAMESPACES = {
+            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'xlink': 'http://www.w3.org/1999/xlink' }
+            >>> machineDate = MachineDate("tests/fixtures/volvoices_2993.xml", NAMESPACES)
+            >>> machineDate.find()
+            {'date_created_d': ['1948-01'], 'date_issued_d': ['1948'], 'date_other_d': []}
+        """
         date_created = [
             value.text
             for value in self.root.xpath(
@@ -532,6 +576,20 @@ class TypesProperties(BaseProperty):
         super().__init__(path, namespaces)
 
     def find(self):
+        """
+        Find all types properties information in the XML file.
+
+        Returns:
+            dict: A dictionary containing types properties information.
+
+        Examples:
+            >>> NAMESPACES = {
+            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'xlink': 'http://www.w3.org/1999/xlink' }
+            >>> types = TypesProperties("tests/fixtures/utsmc_17870.xml", NAMESPACES)
+            >>> types.find()
+            {'form': ['http://vocab.getty.edu/aat/300026430'], 'resource_type': ['http://id.loc.gov/vocabulary/resourceTypes/not', 'http://id.loc.gov/vocabulary/resourceTypes/txt'], 'form_local': []}
+        """
         return {
             "form": self.__find_edm_has_type(),
             "resource_type": self.__find_dcterms_type(),
@@ -673,6 +731,20 @@ class LocalTypesProperties(BaseProperty):
         super().__init__(path, namespaces)
 
     def find(self):
+        """
+        Find all local types properties information in the XML file.
+
+        Returns:
+            dict: A dictionary containing local types properties information.
+
+        Examples:
+            >>> NAMESPACES = {
+            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'xlink': 'http://www.w3.org/1999/xlink' }
+            >>> local_types = LocalTypesProperties("tests/fixtures/egypt_224.xml", NAMESPACES)
+            >>> local_types.find()
+            {'resource_type_local': ['still image'], 'form_local': ['platinum prints']}
+        """
         return {
             "resource_type_local": self.__find_dcterms_type(),
             "form_local": self.__find_local_form(),
@@ -792,6 +864,20 @@ class PublisherProperty(BaseProperty):
         super().__init__(path, namespaces)
 
     def find(self):
+        """
+        Find all publisher property information in the XML file.
+
+        Returns:
+            dict: A dictionary containing publisher property information.
+
+        Examples:
+            >>> NAMESPACES = {
+            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'xlink': 'http://www.w3.org/1999/xlink' }
+            >>> publisher = PublisherProperty("tests/fixtures/playbills:1052.xml", NAMESPACES)
+            >>> publisher.find()
+            {'publisher': []}
+        """
         return {
             "publisher": [
                 uri
@@ -808,6 +894,20 @@ class RightsOrLicenseProperties(BaseProperty):
         super().__init__(path, namespaces)
 
     def find(self):
+        """
+        Find all rights or liscense property information in the XML file.
+
+        Returns:
+            dict: A dictionary containing rights or license property information.
+
+        Examples:
+            >>> NAMESPACES = {
+            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'xlink': 'http://www.w3.org/1999/xlink' }
+            >>> rights = RightsOrLicenseProperties("tests/fixtures/heilman:1010.xml", NAMESPACES)
+            >>> rights.find()
+            {'license': ['http://creativecommons.org/licenses/by-nc-nd/3.0/'], 'rights_statement': ['http://rightsstatements.org/vocab/InC/1.0/']}
+        """
         final = {}
         rights = [
             uri
@@ -846,6 +946,20 @@ class PublicationPlaceProperty(BaseProperty):
         super().__init__(path, namespaces)
 
     def find(self):
+        """
+        Find all publication place property information in the XML file.
+
+        Returns:
+            dict: A dictionary containing publication place property information.
+
+        Examples:
+            >>> NAMESPACES = {
+            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'xlink': 'http://www.w3.org/1999/xlink' }
+            >>> publication_place = PublicationPlaceProperty("tests/fixtures/volvoices_2495.xml", NAMESPACES)
+            >>> publication_place.find()
+            {'publication_place': ['http://id.loc.gov/authorities/names/n82063401']}
+        """
         return {
             "publication_place": [
                 uri
@@ -862,6 +976,20 @@ class LanguageURIProperty(BaseProperty):
         super().__init__(path, namespaces)
 
     def find_term(self):
+        """
+        Find all language URI properties in the XML file.
+
+        Returns:
+            dict: A dictionary containing language URI property information.
+
+        Examples:
+            >>> NAMESPACES = {
+            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'xlink': 'http://www.w3.org/1999/xlink' }
+            >>> language_uri = LanguageURIProperty("tests/fixtures/utsmc:725.xml", NAMESPACES)
+            >>> language_uri.find_term()
+            {'language': ['http://id.loc.gov/vocabulary/iso639-2/fre', 'http://id.loc.gov/vocabulary/iso639-2/ita']}
+        """
         terms_and_uris = {
             "English": "http://id.loc.gov/vocabulary/iso639-2/eng",
             "French": "http://id.loc.gov/vocabulary/iso639-2/fre",
@@ -906,7 +1034,10 @@ class ExtentProperty(BaseProperty):
             dict: A dictionary containing the extent information.
 
         Examples:
-            >>> extent_property = ExtentProperty("tests/fixtures/knoxgardens_125.xml", {"mods": "http://www.loc.gov/mods/v3"})
+            >>> NAMESPACES = {
+            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'xlink': 'http://www.w3.org/1999/xlink' }
+            >>> extent_property = ExtentProperty("tests/fixtures/knoxgardens_125.xml", NAMESPACES)
             >>> extent_property.find()
             {'extent': ['3 1/4 x 5 inches']}
 
