@@ -246,10 +246,31 @@ class NameProperty(XMLtoDictProperty):
 
 
 class GeoNamesProperty(BaseProperty):
+    """
+    Handles the mapping of different types of geonames based on the provided XML data.
+
+    Args:
+        path (str): The path to the XML file.
+        namespaces (dict): A dictionary containing the namespaces used in the XML file.
+    """
     def __init__(self, path, namespaces):
         super().__init__(path, namespaces)
 
     def find(self, name):
+        """
+        Find all geonames in the XML file.
+
+        Args:
+            name (str): The name of the geoname.
+
+        Returns:
+            dict: A dictionary containing the geoname mappings.
+
+        Examples:
+            >>> geonames = GeoNamesProperty("tests/fixtures/webster_1127.xml", {"mods": "http://www.loc.gov/mods/v3"})
+            >>> geonames.find("spatial")
+            {'spatial': ['http://sws.geonames.org/4050810', 'http://sws.geonames.org/4609260', 'http://id.loc.gov/authorities/subjects/sh85057008']}
+        """
         uris = [
             uri.replace("about.rdf", "")
             for uri in self.root.xpath(
