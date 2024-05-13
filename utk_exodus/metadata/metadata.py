@@ -57,6 +57,18 @@ class TitleProperty(BaseProperty):
         ]
 
     def find(self):
+        """
+        Handles the mapping of different types of titles based on the provided XML data.
+
+        Returns:
+            dict: A dictionary containing the mapped titles.
+
+        Example:
+             >>> titles = TitleProperty("tests/fixtures/utsmc_17870.xml", {"mods": "http://www.loc.gov/mods/v3"})
+             >>> titles.find()
+             ... #doctest: +NORMALIZE_WHITESPACE
+             {'title': ['Prussian heroes march'], 'alternative_title': ['Prussian heroes: Prussen helden march']}
+        """
         titles = []
         alternatives = []
         titles_data = self.various_titles
@@ -97,6 +109,18 @@ class RoleAndNameProperty(XMLtoDictProperty):
             return []
 
     def find(self):
+        """
+        Find all names and roles in the XML file.
+
+        Returns:
+            dict: A dictionary containing the roles and names.
+
+        Examples:
+            >>> roles_and_names = RoleAndNameProperty("tests/fixtures/harp_1.xml")
+            >>> roles_and_names.find()
+            {'utk_composer': ['Swan, W. H. (William H.)', 'Swan, Marcus Lafayette'], 'utk_compiler': ['Swan, W. H. (William H.)', 'Swan, Marcus Lafayette']}
+
+        """
         roles_and_names = {}
         for name in self.all_names:
             local_roles = []
@@ -157,6 +181,17 @@ class NameProperty(XMLtoDictProperty):
             return []
 
     def find(self):
+        """
+        Find all names in the XML file.
+
+        Returns:
+            dict: A dictionary containing the names.
+
+        Examples:
+            >>> names = NameProperty("tests/fixtures/harp_1.xml")
+            >>> names.find()
+            {'composer': ['http://id.loc.gov/authorities/names/no2002022963', 'http://id.loc.gov/authorities/names/n78013127'], 'compiler': ['http://id.loc.gov/authorities/names/no2002022963', 'http://id.loc.gov/authorities/names/n78013127']}
+        """
         roles_and_names = {}
         for name in self.all_names:
             roles = []
