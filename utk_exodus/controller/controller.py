@@ -149,6 +149,7 @@ class InterfaceController:
             f"{self.output}/{self.output.split('/')[-1]}.csv",
             "tmp/policy_downloads/current_collection",
         )
+        shutil.rmtree("tmp/policy_downloads/current_collection")
         self.__validate_import()
         self.__curate_filesets_and_attachments(
             f"{self.output}/{self.output.split('/')[-1]}_visibility.csv"
