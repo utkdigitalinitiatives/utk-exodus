@@ -170,6 +170,7 @@ class ResourceIndexSearch:
         work_types = {
             "book": "info:fedora/islandora:bookCModel",
             "image": "info:fedora/islandora:sp_basic_image",
+            "large_image": "info:fedora/islandora:sp_large_image_cmodel",
             "compound": "info:fedora/islandora:compoundCModel",
             "audio": "info:fedora/islandora:sp-audioCModel",
             "video": "info:fedora/islandora:sp_videoCModel",
