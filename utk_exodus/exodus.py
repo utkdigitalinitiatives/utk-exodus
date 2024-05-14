@@ -4,6 +4,7 @@ from utk_exodus.finder import FileOrganizer
 from utk_exodus.metadata import MetadataMapping
 from utk_exodus.validate import ValidateMigration
 from utk_exodus.controller import InterfaceController
+from utk_exodus.template import ImportTemplate
 import click
 import requests
 
@@ -11,7 +12,6 @@ import requests
 @click.group()
 def cli() -> None:
     pass
-
 
 @cli.command("works", help="Create import sheet for works with metadata.")
 @click.option(
@@ -138,3 +138,30 @@ def works_and_files(
         print(
             "You must specify either a path to a directory or both a collection and model."
         )
+
+@cli.command("generate_sheet", help="Create full sample for content model from m3 profile.")
+@click.option(
+    "--model",
+    "-m",
+    type=click.Choice(
+        ["Attachment", "Audio", "Book", "CompoundObject", "GenericWork", "Image", "Newspaper", "PDF", "Video"],
+        case_sensitive=True,
+    ),
+    help="The content models to find rules about.",
+)
+@click.option(
+    "--output",
+    "-o",
+    help="Specify where to write your output file.",
+)
+def generate_sheet(
+    model: str,
+    output: str,
+) -> None:
+    r = requests.get(
+        "https://raw.githubusercontent.com/utkdigitalinitiatives/m3_profiles/main/maps/utk.yml"
+    )
+    with open("tmp/m3.yml", "wb") as f:
+        f.write(r.content)
+    it = ImportTemplate("tmp/m3.yml", model)
+    it.write(output)

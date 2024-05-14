@@ -64,15 +64,20 @@ class InterfaceController:
         )
         return risearch
 
-    def __grab_file_info(self):
-        click.echo(click.style("Grabbing file info ...", fg="yellow", bold=True))
-        x = FileOrganizer("tmp/works.csv", ["filesets", "attachments"], self.remote)
-        x.write_csv(f"{self.output}/{self.output.split('/')[-1]}.csv")
+    @staticmethod
+    def __get_m3():
         r = requests.get(
             "https://raw.githubusercontent.com/utkdigitalinitiatives/m3_profiles/main/maps/utk.yml"
         )
         with open("tmp/m3.yml", "wb") as f:
             f.write(r.content)
+        return
+
+    def __grab_file_info(self):
+        click.echo(click.style("Grabbing file info ...", fg="yellow", bold=True))
+        x = FileOrganizer("tmp/works.csv", ["filesets", "attachments"], self.remote)
+        x.write_csv(f"{self.output}/{self.output.split('/')[-1]}.csv")
+        self.__get_m3()
         return
 
     def __validate_import(self):
