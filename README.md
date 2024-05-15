@@ -72,7 +72,7 @@ If you want to generate a full template for a metadata import, use:
 
 ```shell
 exodus generate_template --model book -o /path/to/sheet.csv
-````
+```
 
 ## What's Missing Here Right Now
 
