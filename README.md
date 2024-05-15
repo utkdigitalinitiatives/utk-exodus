@@ -62,6 +62,18 @@ If for some reason you need to create a files sheet for  works after the fact, u
 exodus add_files --sheet path/to/sheet.csv --files_sheet path/to/files_sheet.csv 
 ```
 
+If you need to remove unused values from an import or work sheet, you can:
+
+```shell
+exodus remove_old_values --sheet path/to/sheet.csv --old_sheet path/to/old_sheet.csv --new_sheet path/to/new_sheet.csv
+```
+
+If you want to generate a full template for a metadata import, use:
+
+```shell
+exodus generate_template --model book -o /path/to/sheet.csv
+````
+
 ## What's Missing Here Right Now
 
 * The ability to create pcdm:Collection objects.
