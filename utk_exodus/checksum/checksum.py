@@ -25,14 +25,33 @@ class HashSheet:
     def checksum(self):
         files_with_checksums = []
         for file in tqdm(self.all_files):
-            response = requests.get(file, stream=True)
-            response.raise_for_status()
-            sha1 = hashlib.sha1()
-            for chunk in response.iter_content(chunk_size=8192):
-                if chunk:
-                    sha1.update(chunk)
-            files_with_checksums.append({"url": file, "checksum": sha1.hexdigest()})
+            hash = self.checksum_file(file)
+            files_with_checksums.append(hash)
         return files_with_checksums
+
+    @staticmethod
+    def checksum_file(file):
+        """Calculate the sha1 checksum of a file.
+
+        Args:
+            file (str): The path to the file to checksum.
+
+        Returns:
+            dict: A dictionary with the url and checksum of the file.
+
+        Examples:
+            >>> hs = HashSheet("tests/fixtures/bad_imports", "example.csv")
+            >>> hs.checksum_file("https://raw.githubusercontent.com/utkdigitalinitiatives/utk-exodus/main/tests/fixtures/colloquy_202.xml")
+            {'url': 'https://raw.githubusercontent.com/utkdigitalinitiatives/utk-exodus/main/tests/fixtures/colloquy_202.xml', 'checksum': '081a51fae0200f266d2933756d48441c4ea77b1e'}
+
+        """
+        response = requests.get(file, stream=True)
+        response.raise_for_status()
+        sha1 = hashlib.sha1()
+        for chunk in response.iter_content(chunk_size=8192):
+            if chunk:
+                sha1.update(chunk)
+        return {"url": file, "checksum": sha1.hexdigest()}
 
     def write(self):
         with open(self.output, "w") as csvfile:
@@ -43,7 +62,7 @@ class HashSheet:
 
 
 if __name__ == "__main__":
-    path = "delete/bad_imports"
+    path = "tests/fixtures/bad_imports"
     output = "delete/sample_checksums.csv"
     checksum = HashSheet(path, output)
     checksum.write()
