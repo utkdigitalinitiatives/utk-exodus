@@ -74,6 +74,12 @@ If you want to generate a full template for a metadata import, use:
 exodus generate_template --model book -o /path/to/sheet.csv
 ```
 
+If you want to generate a sheet of checksums for files that failed to import, you can:
+
+```shell
+exodus hash_errors --path /path/to/directory --output /path/to/sheet.csv
+```
+
 ## What's Missing Here Right Now
 
 * The ability to create pcdm:Collection objects.
