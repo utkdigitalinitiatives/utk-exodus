@@ -37,6 +37,18 @@ Before you start, you need to have a few things in place:
 
 There are several interfaces for the application.
 
+You can always find out what interfaces exist with:
+
+```shell
+exodus --help
+```
+
+Similarly, you can get help for a specific interface with:
+
+```shell
+exodus <interface> --help
+````
+
 If you want to get works and files, and you have metadata files, use:
 
 ```shell
