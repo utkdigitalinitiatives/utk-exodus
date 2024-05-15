@@ -13,6 +13,20 @@ class HashSheet:
 
     @staticmethod
     def walk_sheets(path):
+        """Walk through a directory and return a list of all files.
+
+        Args:
+            path (str): The path to the directory to walk through.
+
+        Returns:
+            list: A list of all files in the directory.
+
+        Examples:
+            >>> hs = HashSheet("tests/fixtures/bad_imports", "example.csv")
+            >>> hs.walk_sheets("tests/fixtures/bad_imports")
+            ['https://digital.lib.utk.edu/migration/mpaekefauver/mpaekefauver:248_MODS.xml', 'https://digital.lib.utk.edu/migration/mpaekefauver/mpaekefauver:309_MODS.xml', 'https://digital.lib.utk.edu/migration/mpaekefauver/mpaekefauver:118_OBJ.jp2', 'https://digital.lib.utk.edu/migration/mpaekefauver/mpaekefauver:99_MODS.xml', 'https://digital.lib.utk.edu/migration/mpaekefauver/mpaekefauver:374_MODS.xml', 'https://digital.lib.utk.edu/migration/mpaekefauver/mpaekefauver:465_OBJ.jp2', 'https://digital.lib.utk.edu/migration/mpaekefauver/mpaekefauver:356_MODS.xml', 'https://digital.lib.utk.edu/migration/mpaekefauver/mpaekefauver:254_OBJ.jp2', 'https://digital.lib.utk.edu/migration/mpaekefauver/mpaekefauver:451_OBJ.jp2', 'https://digital.lib.utk.edu/migration/mpaekefauver/mpaekefauver:104_MODS.xml', 'https://digital.lib.utk.edu/migration/mpaekefauver/mpaekefauver:419_MODS.xml', 'https://digital.lib.utk.edu/migration/mpaekefauver/mpaekefauver:318_OBJ.jp2', 'https://digital.lib.utk.edu/migration/mpaekefauver/mpaekefauver:463_MODS.xml', 'https://digital.lib.utk.edu/migration/mpaekefauver/mpaekefauver:350_MODS.xml', 'https://digital.lib.utk.edu/migration/mpaekefauver/mpaekefauver:108_OBJ.jp2', 'https://digital.lib.utk.edu/migration/mpaekefauver/mpaekefauver:420_MODS.xml']
+
+        """
         all_files = []
         for path, directories, files in os.walk(path):
             for filename in files:
@@ -23,6 +37,15 @@ class HashSheet:
         return all_files
 
     def checksum(self):
+        """Calculate the sha1 checksum of all files listed in csvs in a directory.
+
+        Returns:
+            list: A list of dictionaries with the url and checksum of each file.
+
+        Examples:
+            No example to keep tests running quickly.
+
+        """
         files_with_checksums = []
         for file in tqdm(self.all_files):
             hash = self.checksum_file(file)
