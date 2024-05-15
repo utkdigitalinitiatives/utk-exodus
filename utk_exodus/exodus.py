@@ -6,6 +6,7 @@ from utk_exodus.validate import ValidateMigration
 from utk_exodus.controller import InterfaceController
 from utk_exodus.template import ImportTemplate
 from utk_exodus.combine import ImportRefactor
+from utk_exodus.checksum import HashSheet
 import click
 import requests
 
@@ -213,3 +214,29 @@ def remove_old_values(
     ir = ImportRefactor(sheet, old_sheet)
     ir.create_csv_with_fields_to_nuke(sheet, new_sheet)
     print(f"Refactored sheet written to {new_sheet}.")
+
+
+@cli.command(
+    "hash_errors",
+    help="Create sheet from a directory of errored import sheets.",
+)
+@click.option(
+    "--path",
+    "-p",
+    required=True,
+    help="Specify the path to the directory of sheets.",
+)
+@click.option(
+    "--output",
+    "-o",
+    required=True,
+    help="Specify where you want to write your sheets.",
+)
+def hash_errors(
+    path: str,
+    output: str,
+) -> None:
+    print(f"Generating checksums for bad files in csvs in {path}.")
+    hs = HashSheet(path, output)
+    hs.write()
+    print(f"Hash sheet written to {output}.")
