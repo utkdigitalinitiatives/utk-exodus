@@ -5,6 +5,7 @@ from utk_exodus.metadata import MetadataMapping
 from utk_exodus.validate import ValidateMigration
 from utk_exodus.controller import InterfaceController
 from utk_exodus.template import ImportTemplate
+from utk_exodus.combine import ImportRefactor
 import click
 import requests
 
@@ -12,6 +13,7 @@ import requests
 @click.group()
 def cli() -> None:
     pass
+
 
 @cli.command("works", help="Create import sheet for works with metadata.")
 @click.option(
@@ -93,7 +95,9 @@ def add_files(sheet: str, files_sheet: str, what_to_add: str, remote: str) -> No
 @click.option(
     "--model",
     "-m",
-    type=click.Choice(["book", "image", "large_image", "pdf", "audio", "video"], case_sensitive=False),
+    type=click.Choice(
+        ["book", "image", "large_image", "pdf", "audio", "video"], case_sensitive=False
+    ),
     help="The model you want to download metadata for.",
 )
 @click.option(
@@ -139,12 +143,25 @@ def works_and_files(
             "You must specify either a path to a directory or both a collection and model."
         )
 
-@cli.command("generate_sheet", help="Create full sample for content model from m3 profile.")
+
+@cli.command(
+    "generate_sheet", help="Create full sample for content model from m3 profile."
+)
 @click.option(
     "--model",
     "-m",
     type=click.Choice(
-        ["Attachment", "Audio", "Book", "CompoundObject", "GenericWork", "Image", "Newspaper", "PDF", "Video"],
+        [
+            "Attachment",
+            "Audio",
+            "Book",
+            "CompoundObject",
+            "GenericWork",
+            "Image",
+            "Newspaper",
+            "PDF",
+            "Video",
+        ],
         case_sensitive=True,
     ),
     help="The content models to find rules about.",
@@ -165,3 +182,34 @@ def generate_sheet(
         f.write(r.content)
     it = ImportTemplate("tmp/m3.yml", model)
     it.write(output)
+
+
+@cli.command(
+    "remove_old_values", help="Remove old values from a previous import sheet."
+)
+@click.option(
+    "--sheet",
+    "-s",
+    required=True,
+    help="Specify the current sheet.",
+)
+@click.option(
+    "--old_sheet",
+    "-o",
+    required=True,
+    help="Specify the old sheet with unused values you want to remove.",
+)
+@click.option(
+    "--new_sheet",
+    "-n",
+    required=True,
+    help="Specify where you want to write the new sheet.",
+)
+def remove_old_values(
+    sheet: str,
+    old_sheet: str,
+    new_sheet: str,
+) -> None:
+    ir = ImportRefactor(sheet, old_sheet)
+    ir.create_csv_with_fields_to_nuke(sheet, new_sheet)
+    print(f"Refactored sheet written to {new_sheet}.")
