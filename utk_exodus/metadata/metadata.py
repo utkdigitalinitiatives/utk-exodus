@@ -493,11 +493,25 @@ class MachineDate(BaseProperty):
 
 
 class SubjectProperty(BaseProperty):
-    # TODO: Should this even exist? Can't this just be BaseProperty?
+    """Get subjects from the MODS XML file."""
     def __init__(self, path, namespaces):
         super().__init__(path, namespaces)
 
     def find_topic(self):
+        """Find all topics in the XML file.
+
+        Returns:
+            dict: A dictionary containing topics information.
+
+        Examples:
+            >>> NAMESPACES = {
+            ... 'mods': 'http://www.loc.gov/mods/v3',
+            ... 'xlink': 'http://www.w3.org/1999/xlink' }
+            >>> subjects = SubjectProperty("tests/fixtures/knoxgardens_125.xml", NAMESPACES)
+            >>> subjects.find_topic()
+            {'subject': ['http://id.loc.gov/authorities/subjects/sh85101348', 'http://id.loc.gov/authorities/subjects/sh85053123', 'http://id.loc.gov/authorities/subjects/sh85103022', 'http://id.loc.gov/authorities/subjects/sh2008120720']}
+
+        """
         xpaths = [
             "mods:subject[mods:topic]/@valueURI",
             "mods:subject/mods:topic/@valueURI",
