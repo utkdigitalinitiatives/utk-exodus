@@ -494,6 +494,7 @@ class MachineDate(BaseProperty):
 
 class SubjectProperty(BaseProperty):
     """Get subjects from the MODS XML file."""
+
     def __init__(self, path, namespaces):
         super().__init__(path, namespaces)
 
@@ -532,10 +533,26 @@ class SubjectProperty(BaseProperty):
 
 
 class KeywordProperty(BaseProperty):
+    """Get keywords from the MODS XML file."""
+
     def __init__(self, path, namespaces):
         super().__init__(path, namespaces)
 
     def find_topic(self):
+        """Find all topics in the XML file.
+
+        Returns:
+            dict: A dictionary containing topics information.
+
+        Examples:
+            >>> NAMESPACES = {
+            ... 'mods': 'http://www.loc.gov/mods/v3',
+            ... 'xlink': 'http://www.w3.org/1999/xlink' }
+            >>> keywords = KeywordProperty("tests/fixtures/civilwar_1438.xml", NAMESPACES)
+            >>> keywords.find_topic()
+            {'keyword': ['Jurisdiction -- Tennessee, East -- History -- Civil War, 1861-1865', 'Actions and defenses -- Tennessee, East -- History -- Civil War, 1861-1865', 'Tennessee, East -- Politics and government -- 19th century', 'Wallace, Jesse G. -- Correspondence', 'Temple, Oliver Perry, 1820-1907 -- Correspondence']}
+
+        """
         non_uris_topics = [
             value.text
             for value in self.root.xpath(
