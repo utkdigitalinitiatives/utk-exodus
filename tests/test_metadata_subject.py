@@ -18,7 +18,7 @@ NAMESPACES = {
             "filename": "cdf_13238.xml",
             "expected_results": {
                 "subject": [
-                    "http://id.loc.gov/authorities/subjects/sh85023396 ",
+                    "http://id.loc.gov/authorities/subjects/sh85023396",
                     "http://id.loc.gov/authorities/subjects/sh87000100",
                     "http://id.loc.gov/authorities/names/n79059917",
                 ]
@@ -28,6 +28,17 @@ NAMESPACES = {
             "filename": "egypt_224.xml",
             "expected_results": {
                 "subject": ["http://id.loc.gov/authorities/subjects/sh85016233"]
+            },
+        },
+        {
+            "filename": "knoxgardens_125.xml",
+            "expected_results": {
+                "subject": [
+                    "http://id.loc.gov/authorities/subjects/sh85101348",
+                    "http://id.loc.gov/authorities/subjects/sh85053123",
+                    "http://id.loc.gov/authorities/subjects/sh85103022",
+                    "http://id.loc.gov/authorities/subjects/sh2008120720",
+                ]
             },
         },
     ]

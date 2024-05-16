@@ -540,7 +540,7 @@ class SubjectProperty(BaseProperty):
         return_values = []
         for iterable in all_initial_values:
             for value in iterable:
-                return_values.append(value)
+                return_values.append(value.strip())
         return {"subject": return_values}
 
 
