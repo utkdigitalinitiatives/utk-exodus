@@ -37,6 +37,18 @@ Before you start, you need to have a few things in place:
 
 There are several interfaces for the application.
 
+You can always find out what interfaces exist with:
+
+```shell
+exodus --help
+```
+
+Similarly, you can get help for a specific interface with:
+
+```shell
+exodus <interface> --help
+````
+
 If you want to get works and files, and you have metadata files, use:
 
 ```shell
@@ -72,6 +84,12 @@ If you want to generate a full template for a metadata import, use:
 
 ```shell
 exodus generate_template --model book -o /path/to/sheet.csv
+```
+
+If you want to generate a sheet of checksums for files that failed to import, you can:
+
+```shell
+exodus hash_errors --path /path/to/directory --output /path/to/sheet.csv
 ```
 
 ## What's Missing Here Right Now

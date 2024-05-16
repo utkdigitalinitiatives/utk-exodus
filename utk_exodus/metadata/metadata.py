@@ -34,18 +34,14 @@ class TitleProperty(BaseProperty):
             "supplied": self.__get_titles_from_xpath(
                 "mods:titleInfo[@supplied]/mods:title"
             ),
-            "part_names": self.__get_titles_from_xpath(
-                "mods:titleInfo/mods:partName"
-            ),
+            "part_names": self.__get_titles_from_xpath("mods:titleInfo/mods:partName"),
             "part_numbers": self.__get_titles_from_xpath(
                 "mods:titleInfo/mods:partNumber"
             ),
-            "non_sorts": self.__get_titles_from_xpath(
-                "mods:titleInfo/mods:nonSort"
-            ),
+            "non_sorts": self.__get_titles_from_xpath("mods:titleInfo/mods:nonSort"),
             "alternatives": self.__get_titles_from_xpath(
                 'mods:titleInfo[@type="alternative"]/mods:title'
-            )
+            ),
         }
         return titles_data
 
@@ -83,10 +79,7 @@ class TitleProperty(BaseProperty):
         # Handle alternative titles mapping to dcterms:alternative.
         alternatives.extend(titles_data["alternatives"])
 
-        return {
-            "title": titles,
-            "alternative_title": alternatives
-        }
+        return {"title": titles, "alternative_title": alternatives}
 
 
 class RoleAndNameProperty(XMLtoDictProperty):
@@ -145,7 +138,7 @@ class RoleAndNameProperty(XMLtoDictProperty):
                                 roles_and_names[role] = [part["mods:namePart"]]
                             else:
                                 roles_and_names[role].append([part["mods:namePart"]])
-                        if  isinstance(part, str) and not part.startswith("http"):
+                        if isinstance(part, str) and not part.startswith("http"):
                             if role not in roles_and_names:
                                 roles_and_names[role] = [part]
                             else:
@@ -161,21 +154,22 @@ class NameProperty(XMLtoDictProperty):
     """
     Used for names.
     """
+
     def __init__(self, file):
         super().__init__(file)
         self.all_names = self.__find_all_names()
 
     def __find_all_names(self):
-        if 'mods:name' in self.doc['mods:mods']:
-            all_names = self.doc['mods:mods']['mods:name']
-            if  isinstance(all_names, list):
+        if "mods:name" in self.doc["mods:mods"]:
+            all_names = self.doc["mods:mods"]["mods:name"]
+            if isinstance(all_names, list):
                 return all_names
             elif isinstance(all_names, dict):
                 return [all_names]
             elif isinstance(all_names, str):
                 return [all_names]
             else:
-                return ['Problem']
+                return ["Problem"]
         else:
             return []
 
@@ -196,50 +190,68 @@ class NameProperty(XMLtoDictProperty):
             roles = []
             local_roles = []
             try:
-                roles.append(name['mods:role']['mods:roleTerm']['#text'].lower().replace(' ', '_'))
-                local_roles.append(f"utk_{name['mods:role']['mods:roleTerm']['#text'].lower().replace(' ', '_')}")
+                roles.append(
+                    name["mods:role"]["mods:roleTerm"]["#text"]
+                    .lower()
+                    .replace(" ", "_")
+                )
+                local_roles.append(
+                    f"utk_{name['mods:role']['mods:roleTerm']['#text'].lower().replace(' ', '_')}"
+                )
             except KeyError:
                 print(name)
             # TODO: A name can have multiple roles
             except TypeError:
-                if isinstance(name['mods:role'], list):
-                    for role in name['mods:role']:
-                        if '#text' in role['mods:roleTerm']:
-                            roles.append(role['mods:roleTerm']['#text'].lower().replace(' ', '_'))
-                            local_roles.append(f"utk_{role['mods:roleTerm']['#text'].lower().replace(' ', '_')}")
+                if isinstance(name["mods:role"], list):
+                    for role in name["mods:role"]:
+                        if "#text" in role["mods:roleTerm"]:
+                            roles.append(
+                                role["mods:roleTerm"]["#text"].lower().replace(" ", "_")
+                            )
+                            local_roles.append(
+                                f"utk_{role['mods:roleTerm']['#text'].lower().replace(' ', '_')}"
+                            )
                         else:
-                            roles.append(role['mods:roleTerm'].lower().replace(' ', '_'))
-                            local_roles.append(f"utk_{role['mods:roleTerm'].lower().replace(' ', '_')}")
+                            roles.append(
+                                role["mods:roleTerm"].lower().replace(" ", "_")
+                            )
+                            local_roles.append(
+                                f"utk_{role['mods:roleTerm'].lower().replace(' ', '_')}"
+                            )
                 else:
-                    roles.append(name['mods:role']['mods:roleTerm'].lower().replace(' ', '_'))
-                    local_roles.append(f"utk_{name['mods:role']['mods:roleTerm'].lower().replace(' ', '_')}")
+                    roles.append(
+                        name["mods:role"]["mods:roleTerm"].lower().replace(" ", "_")
+                    )
+                    local_roles.append(
+                        f"utk_{name['mods:role']['mods:roleTerm'].lower().replace(' ', '_')}"
+                    )
             # TODO: Rework this.  It's not pretty but it works.
-            name_value = name['mods:namePart']
-            if '@valueURI' in name:
-                name_value = name['@valueURI']
+            name_value = name["mods:namePart"]
+            if "@valueURI" in name:
+                name_value = name["@valueURI"]
             for role in roles:
                 if isinstance(name_value, list):
                     for part in name_value:
-                        if isinstance(part, dict) and '@valueURI' in part:
+                        if isinstance(part, dict) and "@valueURI" in part:
                             if role not in roles_and_names:
-                                roles_and_names[role] = [part['@valueURI']]
+                                roles_and_names[role] = [part["@valueURI"]]
                             else:
-                                roles_and_names[role].append([part['@valueURI']])
-                elif role not in roles_and_names and name_value.startswith('http'):
+                                roles_and_names[role].append([part["@valueURI"]])
+                elif role not in roles_and_names and name_value.startswith("http"):
                     roles_and_names[role] = [name_value]
-                elif name_value.startswith('http'):
+                elif name_value.startswith("http"):
                     roles_and_names[role].append(name_value)
             for role in local_roles:
                 if isinstance(name_value, list):
                     for part in name_value:
-                        if isinstance(part, str) and not part.startswith('http'):
+                        if isinstance(part, str) and not part.startswith("http"):
                             if role not in roles_and_names:
                                 roles_and_names[role] = [part]
                             else:
                                 roles_and_names[role].append(part)
-                elif role not in roles_and_names and not name_value.startswith('http'):
+                elif role not in roles_and_names and not name_value.startswith("http"):
                     roles_and_names[role] = [name_value]
-                elif not name_value.startswith('http'):
+                elif not name_value.startswith("http"):
                     roles_and_names[role].append(name_value)
         return roles_and_names
 
@@ -252,6 +264,7 @@ class GeoNamesProperty(BaseProperty):
         path (str): The path to the XML file.
         namespaces (dict): A dictionary containing the namespaces used in the XML file.
     """
+
     def __init__(self, path, namespaces):
         super().__init__(path, namespaces)
 
@@ -267,7 +280,7 @@ class GeoNamesProperty(BaseProperty):
 
         Examples:
             >>> NAMESPACES = {
-            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'mods': 'http://www.loc.gov/mods/v3',
             ... 'xlink': 'http://www.w3.org/1999/xlink' }
             >>> geonames = GeoNamesProperty("tests/fixtures/webster_1127.xml", NAMESPACES)
             >>> geonames.find("spatial")
@@ -333,7 +346,7 @@ class PhysicalLocationsProperties(BaseProperty):
 
         Examples:
             >>> NAMESPACES = {
-            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'mods': 'http://www.loc.gov/mods/v3',
             ... 'xlink': 'http://www.w3.org/1999/xlink' }
             >>> physical_location = PhysicalLocationsProperties("tests/fixtures/civilwar_1438.xml", NAMESPACES)
             >>> physical_location.find()
@@ -398,7 +411,7 @@ class DataProvider(BaseProperty):
 
         Examples:
             >>> NAMESPACES = {
-            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'mods': 'http://www.loc.gov/mods/v3',
             ... 'xlink': 'http://www.w3.org/1999/xlink' }
             >>> dataProvider = DataProvider("tests/fixtures/egypt_224.xml", NAMESPACES)
             >>> dataProvider.find()
@@ -433,7 +446,7 @@ class MachineDate(BaseProperty):
 
         Examples:
             >>> NAMESPACES = {
-            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'mods': 'http://www.loc.gov/mods/v3',
             ... 'xlink': 'http://www.w3.org/1999/xlink' }
             >>> machineDate = MachineDate("tests/fixtures/volvoices_2993.xml", NAMESPACES)
             >>> machineDate.find()
@@ -480,75 +493,66 @@ class MachineDate(BaseProperty):
 
 
 class SubjectProperty(BaseProperty):
-    # TODO: Should this even exist? Can't this just be BaseProperty?
+    """Get subjects from the MODS XML file."""
+
     def __init__(self, path, namespaces):
         super().__init__(path, namespaces)
 
     def find_topic(self):
-        subject_topic_value_uris = [
-            uri
-            for uri in self.root.xpath(
-                "mods:subject[mods:topic]/@valueURI", namespaces=self.namespaces
-            )
+        """Find all topics in the XML file.
+
+        Returns:
+            dict: A dictionary containing topics information.
+
+        Examples:
+            >>> NAMESPACES = {
+            ... 'mods': 'http://www.loc.gov/mods/v3',
+            ... 'xlink': 'http://www.w3.org/1999/xlink' }
+            >>> subjects = SubjectProperty("tests/fixtures/knoxgardens_125.xml", NAMESPACES)
+            >>> subjects.find_topic()
+            {'subject': ['http://id.loc.gov/authorities/subjects/sh85101348', 'http://id.loc.gov/authorities/subjects/sh85053123', 'http://id.loc.gov/authorities/subjects/sh85103022', 'http://id.loc.gov/authorities/subjects/sh2008120720']}
+
+        """
+        xpaths = [
+            "mods:subject[mods:topic]/@valueURI",
+            "mods:subject/mods:topic/@valueURI",
+            "mods:subject[mods:name/mods:namePart]/@valueURI",
+            "mods:subject/mods:name/@valueURI",
+            'mods:genre[@authority="aat"]/@valueURI',
+            'mods:genre[@authority="lcmpt"]/@valueURI',
+            'mods:genre[@authority="lcsh"]/@valueURI',
         ]
-        topic_value_uris = [
-            uri
-            for uri in self.root.xpath(
-                "mods:subject/mods:topic/@valueURI", namespaces=self.namespaces
-            )
-        ]
-        subject_name_value_uris = [
-            uri
-            for uri in self.root.xpath(
-                "mods:subject[mods:name/mods:namePart]/@valueURI",
-                namespaces=self.namespaces,
-            )
-        ]
-        name_value_uris = [
-            uri
-            for uri in self.root.xpath(
-                "mods:subject/mods:name/@valueURI", namespaces=self.namespaces
-            )
-        ]
-        aat_genres = [
-            uri
-            for uri in self.root.xpath(
-                'mods:genre[@authority="aat"]/@valueURI', namespaces=self.namespaces
-            )
-        ]
-        lcmpt_genres = [
-            uri
-            for uri in self.root.xpath(
-                'mods:genre[@authority="lcmpt"]/@valueURI', namespaces=self.namespaces
-            )
-        ]
-        lcsh_genres = [
-            uri
-            for uri in self.root.xpath(
-                'mods:genre[@authority="lcsh"]/@valueURI', namespaces=self.namespaces
-            )
-        ]
-        all_initial_values = [
-            subject_topic_value_uris,
-            topic_value_uris,
-            subject_name_value_uris,
-            name_value_uris,
-            aat_genres,
-            lcmpt_genres,
-            lcsh_genres,
-        ]
+
+        # Execute each XPath query and collect results
         return_values = []
-        for iterable in all_initial_values:
-            for value in iterable:
-                return_values.append(value)
+        for xpath in xpaths:
+            uris = self.root.xpath(xpath, namespaces=self.namespaces)
+            return_values.extend(uri.strip() for uri in uris)
+
         return {"subject": return_values}
 
 
 class KeywordProperty(BaseProperty):
+    """Get keywords from the MODS XML file."""
+
     def __init__(self, path, namespaces):
         super().__init__(path, namespaces)
 
     def find_topic(self):
+        """Find all topics in the XML file.
+
+        Returns:
+            dict: A dictionary containing topics information.
+
+        Examples:
+            >>> NAMESPACES = {
+            ... 'mods': 'http://www.loc.gov/mods/v3',
+            ... 'xlink': 'http://www.w3.org/1999/xlink' }
+            >>> keywords = KeywordProperty("tests/fixtures/civilwar_1438.xml", NAMESPACES)
+            >>> keywords.find_topic()
+            {'keyword': ['Jurisdiction -- Tennessee, East -- History -- Civil War, 1861-1865', 'Actions and defenses -- Tennessee, East -- History -- Civil War, 1861-1865', 'Tennessee, East -- Politics and government -- 19th century', 'Wallace, Jesse G. -- Correspondence', 'Temple, Oliver Perry, 1820-1907 -- Correspondence']}
+
+        """
         non_uris_topics = [
             value.text
             for value in self.root.xpath(
@@ -584,7 +588,7 @@ class TypesProperties(BaseProperty):
 
         Examples:
             >>> NAMESPACES = {
-            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'mods': 'http://www.loc.gov/mods/v3',
             ... 'xlink': 'http://www.w3.org/1999/xlink' }
             >>> types = TypesProperties("tests/fixtures/utsmc_17870.xml", NAMESPACES)
             >>> types.find()
@@ -739,7 +743,7 @@ class LocalTypesProperties(BaseProperty):
 
         Examples:
             >>> NAMESPACES = {
-            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'mods': 'http://www.loc.gov/mods/v3',
             ... 'xlink': 'http://www.w3.org/1999/xlink' }
             >>> local_types = LocalTypesProperties("tests/fixtures/egypt_224.xml", NAMESPACES)
             >>> local_types.find()
@@ -872,7 +876,7 @@ class PublisherProperty(BaseProperty):
 
         Examples:
             >>> NAMESPACES = {
-            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'mods': 'http://www.loc.gov/mods/v3',
             ... 'xlink': 'http://www.w3.org/1999/xlink' }
             >>> publisher = PublisherProperty("tests/fixtures/playbills:1052.xml", NAMESPACES)
             >>> publisher.find()
@@ -902,7 +906,7 @@ class RightsOrLicenseProperties(BaseProperty):
 
         Examples:
             >>> NAMESPACES = {
-            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'mods': 'http://www.loc.gov/mods/v3',
             ... 'xlink': 'http://www.w3.org/1999/xlink' }
             >>> rights = RightsOrLicenseProperties("tests/fixtures/heilman:1010.xml", NAMESPACES)
             >>> rights.find()
@@ -954,7 +958,7 @@ class PublicationPlaceProperty(BaseProperty):
 
         Examples:
             >>> NAMESPACES = {
-            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'mods': 'http://www.loc.gov/mods/v3',
             ... 'xlink': 'http://www.w3.org/1999/xlink' }
             >>> publication_place = PublicationPlaceProperty("tests/fixtures/volvoices_2495.xml", NAMESPACES)
             >>> publication_place.find()
@@ -984,7 +988,7 @@ class LanguageURIProperty(BaseProperty):
 
         Examples:
             >>> NAMESPACES = {
-            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'mods': 'http://www.loc.gov/mods/v3',
             ... 'xlink': 'http://www.w3.org/1999/xlink' }
             >>> language_uri = LanguageURIProperty("tests/fixtures/utsmc:725.xml", NAMESPACES)
             >>> language_uri.find_term()
@@ -1023,6 +1027,7 @@ class ExtentProperty(BaseProperty):
         path (str): The path to the file.
         namespaces (dict): Namespaces to be used in the XPath queries.
     """
+
     def __init__(self, path: str, namespaces: dict):
         super().__init__(path, namespaces)
 
@@ -1035,7 +1040,7 @@ class ExtentProperty(BaseProperty):
 
         Examples:
             >>> NAMESPACES = {
-            ... 'mods': 'http://www.loc.gov/mods/v3', 
+            ... 'mods': 'http://www.loc.gov/mods/v3',
             ... 'xlink': 'http://www.w3.org/1999/xlink' }
             >>> extent_property = ExtentProperty("tests/fixtures/knoxgardens_125.xml", NAMESPACES)
             >>> extent_property.find()
@@ -1056,7 +1061,7 @@ class ExtentProperty(BaseProperty):
                 "mods:physicalDescription/mods:extent[@unit]",
                 namespaces=self.namespaces,
             )
-            if node.text is not None and 'unit' in node.attrib
+            if node.text is not None and "unit" in node.attrib
         ]
 
         # Combine extents with and without units into a single list
@@ -1097,7 +1102,7 @@ class MetadataMapping:
                 .replace("_MODS.xml", "")
                 .replace(".xml", ""),
                 "model": model,
-                'sequence': '',
+                "sequence": "",
                 "remote_files": "",
                 "parents": " | ".join(
                     ResourceIndexSearch().get_parent_collections(
@@ -1137,18 +1142,18 @@ class MetadataMapping:
             pages = self.look_for_pages(item)
             for page in pages:
                 new_page = item.copy()
-                new_page['source_identifier'] = page['pid'].replace('info:fedora/', '')
-                new_page['parents'] = item['source_identifier']
-                new_page['model'] = 'Page'
-                new_page['sequence'] = page['page']
+                new_page["source_identifier"] = page["pid"].replace("info:fedora/", "")
+                new_page["parents"] = item["source_identifier"]
+                new_page["model"] = "Page"
+                new_page["sequence"] = page["page"]
                 all_pages.append(new_page)
         for page in all_pages:
             all_file_data.append(page)
         return all_file_data
 
     def look_for_pages(self, data):
-        if data['model'] == 'Book':
-            return ResourceIndexSearch().find_pages_in_book(data['source_identifier'])
+        if data["model"] == "Book":
+            return ResourceIndexSearch().find_pages_in_book(data["source_identifier"])
         return []
 
     def __find_unique_fieldnames(self, data):
@@ -1168,7 +1173,10 @@ class MetadataMapping:
             "info:fedora/islandora:sp_videoCModel": "Video",
         }
         x = ResourceIndexSearch().get_islandora_work_type(
-            file.split("/")[-1].replace("_MODS.xml", "").replace(".xml", "").replace("_", ":")
+            file.split("/")[-1]
+            .replace("_MODS.xml", "")
+            .replace(".xml", "")
+            .replace("_", ":")
         )
         return islandora_types[x]
 

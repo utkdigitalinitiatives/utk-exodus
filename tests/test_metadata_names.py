@@ -35,6 +35,18 @@ fixtures_path = Path(__file__).parent / "fixtures"
                 'copyright_holder': ['http://id.loc.gov/authorities/names/n79144615'],
                 'utk_creator': ['Kefauver, Estes 1903-1963']
             }
+        },
+        {
+            "filename": "cdf_13238.xml",
+            "expected_results": {
+                'author': [
+                    'http://id.loc.gov/authorities/names/n92112591',
+                    'http://id.loc.gov/authorities/names/n86833543'
+                ],
+                'utk_author': [
+                    'Poersch, Oxendine'
+                ]
+            }
         }
     ]
 )
