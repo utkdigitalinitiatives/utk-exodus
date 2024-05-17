@@ -7,6 +7,8 @@ from utk_exodus.controller import InterfaceController
 from utk_exodus.template import ImportTemplate
 from utk_exodus.combine import ImportRefactor
 from utk_exodus.checksum import HashSheet
+from utk_exodus.collection import CollectionImporter
+from utk_exodus.risearch import ResourceIndexSearch
 import click
 import requests
 
@@ -240,3 +242,35 @@ def hash_errors(
     hs = HashSheet(path, output)
     hs.write()
     print(f"Hash sheet written to {output}.")
+
+
+@cli.command(
+    "generate_collection_metadata",
+    help="Generate metadata for a collection.",
+)
+@click.option(
+    "--collection",
+    "-l",
+    required=False,
+    help="Specify the collection you want to download metadata for.",
+)
+@click.option(
+    "--output",
+    "-o",
+    required=False,
+    default="tmp/collections.csv",
+    help="Specify where to write output.",
+)
+def generate_collection_metadata(
+    collection: str,
+    output: str,
+) -> None:
+    if collection:
+        print(f"Generating metadata for {collection}.")
+        x = CollectionImporter([collection])
+    else:
+        print("Generating metadata for all collections.")
+        collections = ResourceIndexSearch().find_all_collections()
+        x = CollectionImporter(collections)
+    x.write_csv(output)
+    print("Done. Metadata written to tmp/all_collections.csv.")

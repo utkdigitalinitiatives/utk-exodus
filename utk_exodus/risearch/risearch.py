@@ -189,7 +189,11 @@ class ResourceIndexSearch:
             f"}}"
         )
         results = requests.get(f"{self.base_url}&query={query}").content.decode("utf-8")
-        return [result for result in results.split("\n") if result != "" and result != '"pid"']
+        return [
+            result
+            for result in results.split("\n")
+            if result != "" and result != '"pid"'
+        ]
 
     def get_policies_for_pages_in_book(self, book):
         query = quote(
@@ -203,7 +207,11 @@ class ResourceIndexSearch:
             f"FILTER(REGEX(STR(?o), 'POLICY')).}}"
         )
         results = requests.get(f"{self.base_url}&query={query}").content.decode("utf-8")
-        return [result for result in results.split("\n") if result != "" and result != '"pid"']
+        return [
+            result
+            for result in results.split("\n")
+            if result != "" and result != '"pid"'
+        ]
 
     def get_policies_based_on_type_and_collection(self, work_type, collection):
         iri = self.__lookup_work_type(work_type).strip()
@@ -219,10 +227,18 @@ class ResourceIndexSearch:
         )
         results = requests.get(f"{self.base_url}&query={query}").content.decode("utf-8")
         if work_type != "book":
-            return [result for result in results.split("\n") if result != "" and result != '"pid"']
+            return [
+                result
+                for result in results.split("\n")
+                if result != "" and result != '"pid"'
+            ]
         else:
             all_policies_from_book = []
-            books = [result for result in results.split("\n") if result != "" and result != '"pid"']
+            books = [
+                result
+                for result in results.split("\n")
+                if result != "" and result != '"pid"'
+            ]
             for book in books:
                 all_policies_from_book.append(book)
                 all_policies_from_book.extend(self.get_policies_for_pages_in_book(book))
@@ -246,8 +262,39 @@ class ResourceIndexSearch:
         results = requests.get(f"{self.base_url}&query={query}").content.decode("utf-8")
         return results.split("\n")[1]
 
+    def find_all_collections(self):
+        ignore = (
+            "info:fedora/islandora:root",
+            "info:fedora/islandora:sp_large_image_collection",
+            "info:fedora/islandora:sp_basic_image_collection",
+            "info:fedora/islandora:manuscriptCollection",
+            "info:fedora/islandora:compound_collection",
+            "info:fedora/islandora:transformCollection",
+            "info:fedora/islandora:bookCollection",
+            "info:fedora/islandora:binary_object_collection",
+            "info:fedora/islandora:audio_collection",
+            "info:fedora/islandora:sp_pdf_collection",
+            "info:fedora/islandora:video_collection",
+            "info:fedora/digital:collections",
+            "info:fedora/ir:citationCollection",
+            "info:fedora/islandora:oralhistories_collection",
+            "info:fedora/collections:test",
+            "info:fedora/collections:rftatest",
+        )
+        query = quote(
+            "SELECT ?collection WHERE { ?collection <info:fedora/fedora-system:def/model#hasModel> <info:fedora/islandora:collectionCModel> . }"
+        )
+        results = requests.get(f"{self.base_url}&query={query}").content.decode("utf-8")
+        return [
+            result.replace("info:fedora/", "")
+            for result in results.split("\n")
+            if result != "" and result not in ignore and result != '"collection"'
+        ]
+
 
 if __name__ == "__main__":
     risearch = ResourceIndexSearch()
-    x = risearch.get_policies_based_on_type_and_collection("book", "collections:galston")
+    x = risearch.get_policies_based_on_type_and_collection(
+        "book", "collections:galston"
+    )
     print(x)

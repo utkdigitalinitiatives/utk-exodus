@@ -92,6 +92,18 @@ If you want to generate a sheet of checksums for files that failed to import, yo
 exodus hash_errors --path /path/to/directory --output /path/to/sheet.csv
 ```
 
+If you want to generate an import sheet for all collections, you can:
+
+```shell
+exodus generate_collection_metadata
+```
+
+If you want to generate an import sheet for a single collection, you can:
+
+```shell
+exodus generate_collection_metadata --collection "namespace:identifier"
+```
+
 ## What's Missing Here Right Now
 
 * The ability to create pcdm:Collection objects.

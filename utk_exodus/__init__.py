@@ -9,8 +9,11 @@ from .controller import InterfaceController
 from .combine import ImportRefactor
 from .template import ImportTemplate
 from .restrict import Restrictions, RestrictionsSheet
+from .collection import CollectionMetadata, CollectionImporter
 
 __all__ = [
+    "CollectionMetadata",
+    "CollectionImporter",
     "FedoraObject",
     "FileCurator",
     "FileOrganizer",
