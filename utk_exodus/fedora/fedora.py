@@ -38,3 +38,12 @@ class FedoraObject:
         else:
             print(f"{r.status_code} on {self.pid}.")
         return
+
+    def streamDatastream(self, dsid):
+        r = requests.get(
+            f"{self.fedora_uri}/objects/{self.pid}/datastreams/{dsid}/content",
+            auth=self.auth,
+            allow_redirects=True,
+            stream=True,
+        )
+        return r
