@@ -219,7 +219,9 @@ class FileOrganizer:
 
 class FileSetFinder:
     def __init__(self, pid):
-        self.universal_ignores = ('DC', 'RELS-EXT', 'TECHMD', 'PREVIEW', 'JPG', 'JP2', 'MEDIUM_SIZE', 'POLICY', 'TN')
+        self.universal_ignores = (
+            'DC', 'RELS-EXT', 'TECHMD', 'PREVIEW', 'JPG', 'JP2', 'MEDIUM_SIZE', 'POLICY', 'TN', 'MODS', 'POLICY'
+        )
         self.pid = pid.replace('.xml', '')
         self.files = self.__get_all_files()
 
