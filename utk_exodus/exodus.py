@@ -9,8 +9,11 @@ from utk_exodus.combine import ImportRefactor
 from utk_exodus.checksum import HashSheet
 from utk_exodus.collection import CollectionImporter
 from utk_exodus.risearch import ResourceIndexSearch
+from utk_exodus.banish import BanishFiles
 import click
 import requests
+import os
+from tqdm import tqdm
 
 
 @click.group()
@@ -274,3 +277,23 @@ def generate_collection_metadata(
         x = CollectionImporter(collections)
     x.write_csv(output)
     print("Done. Metadata written to tmp/all_collections.csv.")
+
+@cli.command(
+    "banish",
+    help="Remove Polices and MODS from import sheets",
+)
+@click.option(
+    "--directory",
+    "-d",
+    required=True,
+    help="The directory of CSVs you want to remove POLICY and MODS from",
+)
+def banish(
+    directory: str,
+) -> None:
+    print(f"MODS and POLICIES From {directory}.")
+    for path, directories, files in os.walk(directory):
+        for file in tqdm(files):
+            if file.endswith(".csv"):
+                bf = BanishFiles(os.path.join(path, file))
+                bf.write(os.path.join(path, file))

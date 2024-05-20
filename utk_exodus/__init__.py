@@ -10,8 +10,10 @@ from .combine import ImportRefactor
 from .template import ImportTemplate
 from .restrict import Restrictions, RestrictionsSheet
 from .collection import CollectionMetadata, CollectionImporter
+from .banish import BanishFiles
 
 __all__ = [
+    "BanishFiles",
     "CollectionMetadata",
     "CollectionImporter",
     "FedoraObject",
