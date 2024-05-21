@@ -1,4 +1,5 @@
 import requests
+import xmltodict
 
 
 class FedoraObject:
@@ -24,13 +25,25 @@ class FedoraObject:
         }
         return mimetypes.get(content_type, "bin")
 
-    def getDatastream(self, dsid, output):
-        r = requests.get(
-            f"{self.fedora_uri}/objects/{self.pid}/datastreams/{dsid}/content",
-            auth=self.auth,
-            allow_redirects=True,
-        )
-        if r.status_code == 200:
+    def getDatastream(self, dsid, output, as_of_date=None):
+        if as_of_date:
+            r = requests.get(
+                f"{self.fedora_uri}/objects/{self.pid}/datastreams/{dsid}/content?asOfDateTime={as_of_date}",
+                auth=self.auth,
+                allow_redirects=True,
+            )
+        else:
+            r = requests.get(
+                f"{self.fedora_uri}/objects/{self.pid}/datastreams/{dsid}/content",
+                auth=self.auth,
+                allow_redirects=True,
+            )
+        if r.status_code == 200 and as_of_date:
+            open(
+                f'{output}/{self.pid}_{dsid}_{as_of_date}.{self.__guess_extension(r.headers.get("Content-Type", "application/binary"))}',
+                "wb",
+            ).write(r.content)
+        elif r.status_code == 200:
             open(
                 f'{output}/{self.pid}_{dsid}.{self.__guess_extension(r.headers.get("Content-Type", "application/binary"))}',
                 "wb",
@@ -47,3 +60,32 @@ class FedoraObject:
             stream=True,
         )
         return r
+
+    def getDatastreamHistory(self, dsid):
+        r = requests.get(
+            f"{self.fedora_uri}/objects/{self.pid}/datastreams/{dsid}/history?format=xml",
+            auth=self.auth,
+            allow_redirects=True,
+        )
+        return xmltodict.parse(r.content.decode("utf-8"))
+
+    def write_all_versions(self, dsid, output):
+        history = self.getDatastreamHistory(dsid)
+        if isinstance(history["datastreamHistory"]["datastreamProfile"], dict):
+            self.getDatastream(
+                dsid, output, history["datastreamHistory"]["datastreamProfile"]["dsCreateDate"]
+            )
+        else:
+            for version in history["datastreamHistory"]["datastreamProfile"]:
+                self.getDatastream(dsid, output, version["dsCreateDate"])
+        return
+
+
+if __name__ == "__main__":
+    import os
+    x = FedoraObject(
+        auth=(os.getenv("FEDORA_USERNAME"), os.getenv("FEDORA_PASSWORD")),
+        fedora_uri=os.getenv("FEDORA_URI"),
+        pid="roth:10"
+    )
+    x.getDatastream("OBJ", "tmp/roth2")

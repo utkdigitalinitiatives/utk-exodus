@@ -10,6 +10,7 @@ from utk_exodus.checksum import HashSheet
 from utk_exodus.collection import CollectionImporter
 from utk_exodus.risearch import ResourceIndexSearch
 from utk_exodus.banish import BanishFiles
+from utk_exodus.fedora import FedoraObject
 import click
 import requests
 import os
@@ -297,3 +298,46 @@ def banish(
             if file.endswith(".csv"):
                 bf = BanishFiles(os.path.join(path, file))
                 bf.write(os.path.join(path, file))
+
+@cli.command(
+    "get_all_versions",
+    help="Download all versions of a datastream.",
+)
+@click.option(
+    "--directory",
+    "-d",
+    required=True,
+    help="The directory to write the versions to.",
+)
+@click.option(
+    "--type",
+    "-t",
+    required=True,
+    type=click.Choice(
+        [
+            "book", "image", "large_image", "pdf", "audio", "video", "compound", "page", "binary", "oral_history"
+        ],
+        case_sensitive=False
+    ),
+    help="The content model you want",
+)
+@click.option(
+    "--dsid",
+    "-ds",
+    required=True,
+    help="The datastream you want to download versions of.",
+)
+def get_all_versions(
+    directory: str,
+    type: str,
+    dsid: str,
+) -> None:
+    print(f"Downloading all versions of {dsid} to {directory}.")
+    for pid in tqdm(ResourceIndexSearch().get_works_of_a_type_with_dsid(type, dsid)):
+        fedora = FedoraObject(
+            auth=(os.getenv("FEDORA_USERNAME"), os.getenv("FEDORA_PASSWORD")),
+            fedora_uri=os.getenv("FEDORA_URI"),
+            pid=pid,
+        )
+        fedora.write_all_versions(dsid, directory)
+    print("Done.")

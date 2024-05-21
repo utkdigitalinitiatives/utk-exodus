@@ -16,7 +16,7 @@ class ResourceIndexSearch:
         self.format = self.validate_format(riformat)
         self.base_url = (
             f"{self.risearch_endpoint}?type=tuples"
-            f"&lang={self.language}&format={self.format}"
+            f"&lang={self.language}&format={self.format}&limit=1000000"
         )
 
     def validate_language(self, language):
@@ -176,6 +176,8 @@ class ResourceIndexSearch:
             "video": "info:fedora/islandora:sp_videoCModel",
             "pdf": "info:fedora/islandora:sp_pdf",
             "page": "info:fedora/islandora:pageCModel",
+            "binary": "info:fedora/islandora:binaryObjectCModel",
+            "oral_history": "info:fedora/islandora:oralhistoriesCModel",
         }
         return work_types.get(work_type, "unknown")
 
@@ -291,10 +293,22 @@ class ResourceIndexSearch:
             if result != "" and result not in ignore and result != '"collection"'
         ]
 
+    def get_works_of_a_type_with_dsid(self, work_type, dsid):
+        query = quote(
+            f"""PREFIX system: <info:fedora/fedora-system:def/view#>
+            SELECT ?pid WHERE {{
+            ?pid <info:fedora/fedora-system:def/model#hasModel> <{self.__lookup_work_type(work_type)}> ;
+            system:disseminates ?dsid .
+            FILTER(REGEX(STR(?dsid), "{dsid}"))
+            }}"""
+        )
+        results = requests.get(f"{self.base_url}&query={query}").content.decode("utf-8")
+        return [
+            result.replace("info:fedora/", "")
+            for result in results.split("\n")
+            if result != "" and result != '"pid"'
+        ]
 
 if __name__ == "__main__":
     risearch = ResourceIndexSearch()
-    x = risearch.get_policies_based_on_type_and_collection(
-        "book", "collections:galston"
-    )
-    print(x)
+    x = risearch.get_works_of_a_type_with_dsid("book", "MODS")
