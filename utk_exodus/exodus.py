@@ -11,10 +11,12 @@ from utk_exodus.collection import CollectionImporter
 from utk_exodus.risearch import ResourceIndexSearch
 from utk_exodus.banish import BanishFiles
 from utk_exodus.fedora import FedoraObject
+from utk_exodus.review import ExistingImport
 import click
 import requests
 import os
 from tqdm import tqdm
+from csv import DictReader
 
 
 @click.group()
@@ -103,7 +105,7 @@ def add_files(sheet: str, files_sheet: str, what_to_add: str, remote: str) -> No
     "--model",
     "-m",
     type=click.Choice(
-        ["book", "image", "large_image", "pdf", "audio", "video"], case_sensitive=False
+        ["book", "image", "large_image", "pdf", "audio", "video", "compound"], case_sensitive=False
     ),
     help="The model you want to download metadata for.",
 )
@@ -341,3 +343,31 @@ def get_all_versions(
         )
         fedora.write_all_versions(dsid, directory)
     print("Done.")
+
+@cli.command(
+    "export_errors",
+    help="Using a CSV, export all the errors from failed imports",
+)
+@click.option(
+    "--csv",
+    "-c",
+    required=True,
+    help="The CSV you want to read in",
+)
+@click.option(
+    "--directory",
+    "-d",
+    required=True,
+    help="Where to export the errors to",
+)
+def export_errors(
+    csv: str,
+    directory: str,
+) -> None:
+    print(f"Exporting errors from {csv} to {directory}.")
+    with open(csv, "r") as file:
+        reader = DictReader(file)
+        import_ids = [row["Link to Errors"].split('/')[-2] for row in reader if row["Ongoing Issues"] == "Y"]
+    ei = ExistingImport([import_ids], directory, initial_auth=(os.getenv('HYKU_BASIC_AUTH_USER'), os.getenv('HYKU_BASIC_AUTH_PASS')))
+    ei.sign_in_to_hyku(os.getenv('HYKU_USER'), os.getenv('HYKU_PASS'))
+    ei.export_errors()

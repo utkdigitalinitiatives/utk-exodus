@@ -11,11 +11,13 @@ from .template import ImportTemplate
 from .restrict import Restrictions, RestrictionsSheet
 from .collection import CollectionMetadata, CollectionImporter
 from .banish import BanishFiles
+from .review import ExistingImport
 
 __all__ = [
     "BanishFiles",
     "CollectionMetadata",
     "CollectionImporter",
+    "ExistingImport",
     "FedoraObject",
     "FileCurator",
     "FileOrganizer",
