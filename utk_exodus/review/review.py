@@ -48,7 +48,7 @@ class ExistingImport:
             url = f'{self.hyku_instance}/importers/{import_id}/export_errors'
             response = self.requests_session.get(url)
             if response.status_code == 200:
-                file_path = os.path.join(os.getcwd(), f'export_errors_{import_id}.csv')
-                with open(f"{self.output}/{file_path}", 'wb') as file:
+                file_path = os.path.join(os.getcwd(), self.output,  f'export_errors_{import_id}.csv')
+                with open(f"{file_path}", 'wb') as file:
                     file.write(response.content)
         return

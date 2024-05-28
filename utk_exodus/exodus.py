@@ -368,6 +368,6 @@ def export_errors(
     with open(csv, "r") as file:
         reader = DictReader(file)
         import_ids = [row["Link to Errors"].split('/')[-2] for row in reader if row["Ongoing Issues"] == "Y"]
-    ei = ExistingImport([import_ids], directory, initial_auth=(os.getenv('HYKU_BASIC_AUTH_USER'), os.getenv('HYKU_BASIC_AUTH_PASS')))
+    ei = ExistingImport(import_ids, directory, initial_auth=(os.getenv('HYKU_BASIC_AUTH_USER'), os.getenv('HYKU_BASIC_AUTH_PASS')))
     ei.sign_in_to_hyku(os.getenv('HYKU_USER'), os.getenv('HYKU_PASS'))
     ei.export_errors()
