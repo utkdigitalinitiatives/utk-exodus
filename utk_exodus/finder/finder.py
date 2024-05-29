@@ -188,6 +188,18 @@ class FileOrganizer:
                             new_csv_content.append(self.__add_an_attachment(dsid, row))
                         if 'filesets' in what_to_add:
                             new_csv_content.append(self.__add_a_file(dsid, row))
+            elif row['model'] == "CompoundObject":
+                for dsid in all_files:
+                    if 'PRESERVE' in all_files and 'OBJ' in all_files:
+                        if 'attachments' in what_to_add:
+                            new_csv_content.append(self.__add_an_attachment(dsid, row, True))
+                        if 'filesets' in what_to_add:
+                            new_csv_content.append(self.__add_a_file(dsid, row, True))
+                    else:
+                        if 'attachments' in what_to_add:
+                            new_csv_content.append(self.__add_an_attachment(dsid, row))
+                        if 'filesets' in what_to_add:
+                            new_csv_content.append(self.__add_a_file(dsid, row))
             elif row['model'] == "Page":
                 dsids_to_remove = ('MODS', 'RELS-INT', 'PDF')
                 for dsid in dsids_to_remove:
