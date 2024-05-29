@@ -30,7 +30,7 @@ class ExistingImport:
             )
 
     def sign_in_to_hyku(self, username, password):
-        print(f'\nSigning in to Hyku\n')
+        print('\nSigning in to Hyku\n')
         self.s.driver.ensure_element_by_xpath("//input[@id='user_email']").send_keys(username, Keys.ENTER)
         self.s.driver.ensure_element_by_xpath("//input[@id='user_password']").send_keys(password, Keys.ENTER)
         return
