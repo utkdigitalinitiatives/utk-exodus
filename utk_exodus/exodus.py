@@ -371,3 +371,28 @@ def export_errors(
     ei = ExistingImport(import_ids, directory, initial_auth=(os.getenv('HYKU_BASIC_AUTH_USER'), os.getenv('HYKU_BASIC_AUTH_PASS')))
     ei.sign_in_to_hyku(os.getenv('HYKU_USER'), os.getenv('HYKU_PASS'))
     ei.export_errors()
+
+@cli.command(
+    "add_datastreams",
+    help="Add datastreams to existing PIDS",
+)
+@click.option(
+    "--path",
+    "-p",
+    required=True,
+    help="Path to the Original Files",
+)
+def add_datastreams(
+    path: str,
+) -> None:
+    print(f"Adding datastreams {path}.")
+    for path, directories, files in os.walk(path):
+        for file in tqdm(files):
+            pid = file.split('_')[0]
+            dsid = file.split('_')[1].split('.')[0]
+            fedora = FedoraObject(
+                auth=(os.getenv("FEDORA_USERNAME"), os.getenv("FEDORA_PASSWORD")),
+                fedora_uri=os.getenv("FEDORA_URI"),
+                pid=pid,
+            )
+            fedora.add_datastream(dsid, os.path.join(path, file))

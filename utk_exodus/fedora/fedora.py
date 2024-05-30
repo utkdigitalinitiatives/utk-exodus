@@ -80,12 +80,22 @@ class FedoraObject:
                 self.getDatastream(dsid, output, version["dsCreateDate"])
         return
 
+    def add_datastream(self, dsid, file, mimetype="text/plain"):
+        r = requests.post(
+            f"{self.fedora_uri}/objects/{self.pid}/datastreams/{dsid}?controlGroup=M&dsLabel={dsid}&versionable=true"
+            f"&dsState=A&logMessage=Added+{dsid}+datastream+to+{self.pid}.",
+            auth=self.auth,
+            headers={"Content-Type": mimetype},
+            data=open(file, "rb"),
+        )
+        return r
+
 
 if __name__ == "__main__":
     import os
     x = FedoraObject(
         auth=(os.getenv("FEDORA_USERNAME"), os.getenv("FEDORA_PASSWORD")),
         fedora_uri=os.getenv("FEDORA_URI"),
-        pid="roth:10"
+        pid="uthandbooks:7505"
     )
-    x.getDatastream("OBJ", "tmp/roth2")
+    x.add_datastream("OCR", "/Users/markbaggett/code/exodus/new_ocr_hocr/uthandbooks:7505_OCR.txt")

@@ -340,6 +340,25 @@ class ResourceIndexSearch:
             if result != "" and result != '"pid"'
         ]
 
+    def find_pids_and_pages_from_book_local_id(self, local_id):
+        query = quote(
+            f"""
+            SELECT ?pid ?page WHERE {{
+            ?pid <info:fedora/fedora-system:def/relations-external#isMemberOf> ?book ;
+            <http://islandora.ca/ontology/relsext#isPageNumber> ?page .
+            ?book <http://purl.org/dc/elements/1.1/identifier> ?id .
+            FILTER(REGEX(?id, "{local_id}"))
+            }}
+            """
+        )
+        results = requests.get(f"{self.base_url}&query={query}").content.decode("utf-8")
+        return [
+            (result.replace("info:fedora/", "").split(",")[0], result.split(',')[1])
+            for result in results.split("\n")
+            if result != "" and result != '"pid","page"'
+        ]
+
+
 if __name__ == "__main__":
     risearch = ResourceIndexSearch()
     x = risearch.get_works_of_a_type_with_dsid("book", "MODS")
