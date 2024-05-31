@@ -154,6 +154,22 @@ class ResourceIndexSearch:
         page_results = requests.get(f"{self.base_url}&query={query}").content
         return self.clean_pages(page_results)
 
+    def get_compound_object_parts(self, compound_object):
+        query = quote(
+            f"""PREFIX fedora: <info:fedora/fedora-system:def/relations-external#>
+            PREFIX fedoraModel: <info:fedora/fedora-system:def/model#>
+            PREFIX islandora: <http://islandora.ca/ontology/relsext#>
+            SELECT ?pid ?sequence ?model WHERE {{ 
+            ?pid fedora:isConstituentOf <info:fedora/{compound_object}>;
+            fedoraModel:hasModel ?model;
+            islandora:isSequenceNumberOf{compound_object.replace(':', '_')} ?sequence . 
+            FILTER(REGEX(STR(?model), "islandora")) . }}
+            """
+        )
+        results = requests.get(f"{self.base_url}&query={query}").content
+        print(self.clean_compound_parts(results))
+        return self.clean_compound_parts(results)
+
     @staticmethod
     def clean_pages(results):
         all_pages = []
@@ -164,6 +180,21 @@ class ResourceIndexSearch:
                     {"pid": item.split(",")[0], "page": item.split(",")[1]}
                 )
         return all_pages
+
+    @staticmethod
+    def clean_compound_parts(results):
+        all_parts = []
+        cleaned = results.decode("utf-8").split("\n")
+        for item in cleaned:
+            if item != '"pid","sequence","model"' and item != "":
+                all_parts.append(
+                    {
+                        "pid": item.split(",")[0],
+                        "sequence": item.split(",")[1],
+                        "model": item.split(",")[2],
+                    }
+                )
+        return all_parts
 
     @staticmethod
     def __lookup_work_type(work_type):
@@ -308,6 +339,25 @@ class ResourceIndexSearch:
             for result in results.split("\n")
             if result != "" and result != '"pid"'
         ]
+
+    def find_pids_and_pages_from_book_local_id(self, local_id):
+        query = quote(
+            f"""
+            SELECT ?pid ?page WHERE {{
+            ?pid <info:fedora/fedora-system:def/relations-external#isMemberOf> ?book ;
+            <http://islandora.ca/ontology/relsext#isPageNumber> ?page .
+            ?book <http://purl.org/dc/elements/1.1/identifier> ?id .
+            FILTER(REGEX(?id, "{local_id}"))
+            }}
+            """
+        )
+        results = requests.get(f"{self.base_url}&query={query}").content.decode("utf-8")
+        return [
+            (result.replace("info:fedora/", "").split(",")[0], result.split(',')[1])
+            for result in results.split("\n")
+            if result != "" and result != '"pid","page"'
+        ]
+
 
 if __name__ == "__main__":
     risearch = ResourceIndexSearch()

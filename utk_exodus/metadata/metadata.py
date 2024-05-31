@@ -1140,6 +1140,7 @@ class MetadataMapping:
             all_file_data.append(output_data)
         for item in all_file_data:
             pages = self.look_for_pages(item)
+            parts = self.look_for_compound_parts(item)
             for page in pages:
                 new_page = item.copy()
                 new_page["source_identifier"] = page["pid"].replace("info:fedora/", "")
@@ -1147,6 +1148,13 @@ class MetadataMapping:
                 new_page["model"] = "Page"
                 new_page["sequence"] = page["page"]
                 all_pages.append(new_page)
+            for part in parts:
+                new_part = item.copy()
+                new_part["source_identifier"] = part["pid"].replace("info:fedora/", "")
+                new_part["parents"] = item["source_identifier"]
+                new_part["model"] = "Page"
+                new_part["sequence"] = part["sequence"]
+                all_pages.append(new_part)
         for page in all_pages:
             all_file_data.append(page)
         return all_file_data
@@ -1154,6 +1162,11 @@ class MetadataMapping:
     def look_for_pages(self, data):
         if data["model"] == "Book":
             return ResourceIndexSearch().find_pages_in_book(data["source_identifier"])
+        return []
+
+    def look_for_compound_parts(self, data):
+        if data["model"] == "CompoundObject":
+            return ResourceIndexSearch().get_compound_object_parts(data["source_identifier"])
         return []
 
     def __find_unique_fieldnames(self, data):
@@ -1166,6 +1179,7 @@ class MetadataMapping:
         islandora_types = {
             "info:fedora/islandora:sp-audioCModel": "Audio",
             "info:fedora/islandora:bookCModel": "Book",
+            "info:fedora/islandora:compoundCModel": "CompoundObject",
             "info:fedora/islandora:binaryObjectCModel": "Generic",
             "info:fedora/islandora:sp_large_image_cmodel": "Image",
             "info:fedora/islandora:sp_basic_image": "Image",
@@ -1185,6 +1199,7 @@ class MetadataMapping:
         ontology_values = {
             "Audio": "https://ontology.lib.utk.edu/works#AudioWork",
             "Book": "https://ontology.lib.utk.edu/works#BookWork",
+            "CompoundObject": "https://ontology.lib.utk.edu/works#CompoundObjectWork",
             "Generic": "https://ontology.lib.utk.edu/works#GenericWork",
             "Image": "https://ontology.lib.utk.edu/works#ImageWork",
             "Pdf": "https://ontology.lib.utk.edu/works#PDFWork",
