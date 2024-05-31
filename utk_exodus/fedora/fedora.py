@@ -1,5 +1,6 @@
 import requests
 import xmltodict
+from urllib.parse import quote
 
 
 class FedoraObject:
@@ -90,12 +91,76 @@ class FedoraObject:
         )
         return r
 
+    def purge_relationship(self, predicate, object, is_literal=True):
+        body = f"/objects/{self.pid}/relationships?subject=info%3afedora/{self.pid}&predicate={quote(predicate)}&object={quote(object)}&isLiteral={is_literal}"
+        r = requests.delete(
+            f"{self.fedora_uri}{body}",
+            auth=self.auth,
+        )
+        return r
+
+    def add_relationship(self, predicate, object, is_literal=True):
+        r = requests.post(
+            f"{self.fedora_uri}/objects/{self.pid}/relationships/new?subject=info%3afedora/{self.pid}&predicate={quote(predicate)}&object={quote(object)}&isLiteral={is_literal}",
+            auth=self.auth,
+        )
+        return r
+
+    def remove_membership_of_page(self, book_pid):
+        # Remove the isPageOf relationship
+        self.purge_relationship(
+            "http://islandora.ca/ontology/relsext#isPageOf", f"info:fedora/{book_pid}", False
+        )
+        # Remove isMemberOf relationship
+        self.purge_relationship(
+            "info:fedora/fedora-system:def/relations-external#isMemberOf",
+            f"info:fedora/{book_pid}",
+            False
+        )
+        return
+
+    def add_membership_of_page(self, book_pid):
+        self.add_relationship(
+            "http://islandora.ca/ontology/relsext#isPageOf", f"info:fedora/{book_pid}", False
+        )
+        self.add_relationship(
+            "info:fedora/fedora-system:def/relations-external#isMemberOf", f"info:fedora/{book_pid}", False
+        )
+        return
+
+    def remove_sequencing(self, sequence_number):
+        self.purge_relationship(
+            "http://islandora.ca/ontology/relsext#isSequenceNumber", sequence_number, True
+        )
+        self.purge_relationship(
+            "http://islandora.ca/ontology/relsext#isPageNumber", sequence_number, True
+        )
+        self.purge_relationship(
+            "http://islandora.ca/ontology/relsext#isSection", sequence_number, True
+        )
+        return
+
+    def add_sequencing(self, sequence_number):
+        self.add_relationship(
+            "http://islandora.ca/ontology/relsext#isSequenceNumber", sequence_number, True
+        )
+        self.add_relationship(
+            "http://islandora.ca/ontology/relsext#isPageNumber", sequence_number, True
+        )
+        self.add_relationship(
+            "http://islandora.ca/ontology/relsext#isSection", sequence_number, True
+        )
+        return
+
 
 if __name__ == "__main__":
     import os
     x = FedoraObject(
         auth=(os.getenv("FEDORA_USERNAME"), os.getenv("FEDORA_PASSWORD")),
         fedora_uri=os.getenv("FEDORA_URI"),
-        pid="uthandbooks:7505"
+        pid="beacon:35815"
     )
-    x.add_datastream("OCR", "/Users/markbaggett/code/exodus/new_ocr_hocr/uthandbooks:7505_OCR.txt")
+    x.remove_membership_of_page("beacon:35814")
+    x.remove_sequencing("10")
+    x.add_sequencing("12")
+    x.add_membership_of_page("beacon:35825")
