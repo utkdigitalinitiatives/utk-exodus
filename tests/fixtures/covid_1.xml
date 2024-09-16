@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='ASCII'?>
+<mods:mods xmlns:mods="http://www.loc.gov/mods/v3">
+  <mods:titleInfo>
+    <mods:title>Chronicling Covid</mods:title>
+  </mods:titleInfo>
+  <mods:identifier>AR-2022-002</mods:identifier>
+  <mods:identifier type="uuid"></mods:identifier>
+  <mods:identifier type="pid">covid:1</mods:identifier>
+  <mods:abstract>Documentary project that includes online form questionnaires and digital and physical creative works submitted by student, faculty, and staff.</mods:abstract>
+  <mods:originInfo>
+    <mods:dateCreated>2020</mods:dateCreated>
+  </mods:originInfo>
+  <mods:physicalDescription>
+    <mods:extent></mods:extent>
+  </mods:physicalDescription>
+  <mods:language>
+    <mods:languageTerm authority="iso639-2b" type="text">English</mods:languageTerm>
+  </mods:language>
+  <mods:accessCondition type="use and reproduction">Copyright Not Evaluated</mods:accessCondition>
+  <mods:note></mods:note>
+</mods:mods>

@@ -141,3 +141,33 @@ A complex property might look like this:
 
 An agnostic property must always have the `property` property while a complex property may have `property` or 
 `properties`.
+
+## Development
+
+### Running Tests
+
+Tests can be run with Pytest:
+
+```shell
+pytest
+```
+
+New versions of packages can be published and pushed to pypi.org with Poetry.
+
+First, make sure you follow [semantic versioning](https://semver.org/) and set a new release version in
+`pyproject.toml`:
+
+```toml
+[tool.poetry]
+name = "utk-exodus"
+version = "0.2.1"
+```
+
+**Warning**: Failure to follow semantic versioning may break installations and updates with `pip` and `pipx`.
+
+After you set a new `version` in `pyproject.toml`, build an publish your new package like so:
+
+```
+poetry build
+poetry publish
+```

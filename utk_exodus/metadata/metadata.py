@@ -929,11 +929,14 @@ class RightsOrLicenseProperties(BaseProperty):
             )
             if "creativecommons.org" in uri
         ]
+        # If Rights, set.
         if len(rights) > 0:
             final["rights_statement"] = rights
+        # If Licenses, set.
         if len(licenses) > 0:
             final["license"] = licenses
-        if len(rights) == 0:
+        # If no rights and a license, set a rights.
+        if len(rights) == 0 and len(licenses) > 0:
             if licenses[0] == "http://creativecommons.org/publicdomain/zero/1.0/":
                 final["rights_statement"] = [
                     "http://rightsstatements.org/vocab/NKC/1.0/"
@@ -942,6 +945,11 @@ class RightsOrLicenseProperties(BaseProperty):
                 final["rights_statement"] = [
                     "http://rightsstatements.org/vocab/InC/1.0/"
                 ]
+        # If no rights and no license, set a rights.
+        elif len(rights) == 0 and len(licenses) == 0:
+            final["rights_statement"] = [
+                "http://rightsstatements.org/vocab/CNE/1.0/"
+            ]
         return final
 
 

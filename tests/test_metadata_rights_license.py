@@ -20,6 +20,11 @@ NAMESPACES = {
          "expected_results": {
             'rights_statement': ['http://rightsstatements.org/vocab/NoC-US/1.0/']
             }
+        },
+        {"filename": "covid_1.xml",
+         "expected_results": {
+            'rights_statement': ['http://rightsstatements.org/vocab/CNE/1.0/']
+            }
         }
     ]
 )
