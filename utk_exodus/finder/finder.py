@@ -259,6 +259,8 @@ class RDFTypeGenerator:
             return self.__get_rdf_types_for_file_on_a_pdf_work(dsid, preserve_and_obj)
         elif self.parent_type == "Page":
             return self.__get_rdf_types_for_file_on_a_pdf_work(dsid, preserve_and_obj)
+        elif self.parent_type == "CompoundObject":
+            return self.__get_rdf_types_for_file_on_a_compound_object(dsid)
         else:
             raise Exception(f"Parent type unknown: {self.parent_type}")
 
@@ -358,6 +360,17 @@ class RDFTypeGenerator:
             return "http://pcdm.org/file-format-types#Document | http://pcdm.org/use#ServiceFile"
         elif dsid == "TEI":
             return "http://pcdm.org/file-format-types#Markup"
+        else:
+            return "http://pcdm.org/use#OriginalFile"
+
+    @staticmethod
+    def __get_rdf_types_for_file_on_a_compound_object(dsid):
+        if dsid == "MODS":
+            return "http://pcdm.org/file-format-types#Markup"
+        elif dsid == "AIP":
+            return "http://pcdm.org/use#PreservationFile"
+        elif dsid == "DIP":
+            return "http://pcdm.org/use#IntermediateFile"
         else:
             return "http://pcdm.org/use#OriginalFile"
 
