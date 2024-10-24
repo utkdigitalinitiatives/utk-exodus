@@ -35,138 +35,109 @@ class CollectionMetadata:
         return " | ".join(all_matches)
 
     def grab_all_metadata(self):
-        try:
-            return {
-                "source_identifier": self.pid,
-                "model": "Collection",
-                "parents": "",
-                "title": self.simplify_xpath("mods:titleInfo/mods:title"),
-                "abstract": self.simplify_xpath("mods:abstract"),
-                "contributor": "",
-                "utk_contributor": self.get_text_from_multiple_xpaths(
-                    [
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Contributor")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Addressee")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Arranger")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Associated Name")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Autographer")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Censor")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Choreographer")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Client")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Contractor")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Copyright Holder")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Dedicatee")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Depicted")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Distributor")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Donor")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Editor")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Editor of Compilation")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Former Owner")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Honoree")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Host Institution")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Instrumentalist")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Interviewer")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Issuing Body")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Music Copyist")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Musical Director")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Organizer")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Originator")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Owner")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Performer")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Printer")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Printer of Plates")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Producer")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Production Company")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Publisher")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Restorationist")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Set Designer")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Signer")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Speaker")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Stage Director")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Stage Manager")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Standards Body")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Surveyor")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Translator")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Videographer")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Witness")]]/mods:namePart',
-                    ]
-                ),
-                "creator": "",
-                "utk_creator": self.get_text_from_multiple_xpaths(
-                    [
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Creator")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Architect")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Artist")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Attributed Name")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Author")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Binding Designer")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Cartographer")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Compiler")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Composer")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Correspondent")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Costume Designer")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Designer")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Engraver")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Illustrator")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Interviewee")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Lithographer")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Lyricist")]]/mods:namePart',
-                        'mods:name[mods:role/mods:roleTerm[contains(.,"Photographer")]]/mods:namePart',
-                    ]
-                ),
-                "date_created": self.simplify_xpath(
-                    "mods:originInfo/mods:dateCreated[not(@encoding)]"
-                ),
-                "date_issued": self.simplify_xpath(
-                    "mods:originInfo/mods:dateIssued[not(@encoding)]"
-                ),
-                "date_created_d": self.simplify_xpath(
-                    "mods:originInfo/mods:dateCreated[@encoding]"
-                ),
-                "date_issued_d": self.simplify_xpath(
-                    "mods:originInfo/mods:dateIssued[@encoding]"
-                ),
-                "utk_publisher": self.simplify_xpath("mods:originInfo/mods:publisher"),
-                "publisher": "",
-                "publication_place": "",
-                "extent": self.simplify_xpath("mods:physicalDescription/mods:extent"),
-                "form": self.simplify_xpath("mods:physicalDescription/mods:form"),
-                "subject": "",
-                "keyword": self.simplify_xpath("mods:subject/mods:topic"),
-                "spatial": "",
-                "resource_type": "",
-                "note": self.simplify_xpath("mods:note"),
-                "repository": "",
-                "visibility": self.get_policy(self.pid),
-            }
-        except:
-            return {
-                "source_identifier": self.pid,
-                "model": "Collection",
-                "parents": "",
-                "title": "",
-                "abstract": "",
-                "contributor": "",
-                "utk_contributor": "",
-                "creator": "",
-                "utk_creator": "",
-                "date_created": "",
-                "date_issued": "",
-                "date_created_d": "",
-                "date_issued_d": "",
-                "utk_publisher": "",
-                "publisher": "",
-                "publication_place": "",
-                "extent": "",
-                "form": "",
-                "subject": "",
-                "keyword": "",
-                "spatial": "",
-                "resource_type": "",
-                "note": "",
-                "repository": "",
-                "visibility": self.get_policy(self.pid),
-            }
+        return {
+            "source_identifier": self.pid,
+            "model": "Collection",
+            "parents": "",
+            "title": self.simplify_xpath("mods:titleInfo/mods:title"),
+            "abstract": self.simplify_xpath("mods:abstract"),
+            "contributor": "",
+            "utk_contributor": self.get_text_from_multiple_xpaths(
+                [
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Contributor")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Addressee")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Arranger")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Associated Name")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Autographer")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Censor")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Choreographer")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Client")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Contractor")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Copyright Holder")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Dedicatee")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Depicted")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Distributor")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Donor")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Editor")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Editor of Compilation")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Former Owner")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Honoree")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Host Institution")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Instrumentalist")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Interviewer")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Issuing Body")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Music Copyist")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Musical Director")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Organizer")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Originator")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Owner")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Performer")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Printer")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Printer of Plates")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Producer")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Production Company")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Publisher")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Restorationist")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Set Designer")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Signer")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Speaker")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Stage Director")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Stage Manager")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Standards Body")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Surveyor")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Translator")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Videographer")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Witness")]]/mods:namePart',
+                ]
+            ),
+            "creator": "",
+            "utk_creator": self.get_text_from_multiple_xpaths(
+                [
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Creator")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Architect")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Artist")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Attributed Name")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Author")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Binding Designer")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Cartographer")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Compiler")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Composer")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Correspondent")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Costume Designer")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Designer")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Engraver")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Illustrator")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Interviewee")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Lithographer")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Lyricist")]]/mods:namePart',
+                    'mods:name[mods:role/mods:roleTerm[contains(.,"Photographer")]]/mods:namePart',
+                ]
+            ),
+            "date_created": self.simplify_xpath(
+                "mods:originInfo/mods:dateCreated[not(@encoding)]"
+            ),
+            "date_issued": self.simplify_xpath(
+                "mods:originInfo/mods:dateIssued[not(@encoding)]"
+            ),
+            "date_created_d": self.simplify_xpath(
+                "mods:originInfo/mods:dateCreated[@encoding]"
+            ),
+            "date_issued_d": self.simplify_xpath(
+                "mods:originInfo/mods:dateIssued[@encoding]"
+            ),
+            "utk_publisher": self.simplify_xpath("mods:originInfo/mods:publisher"),
+            "publisher": "",
+            "publication_place": "",
+            "extent": self.simplify_xpath("mods:physicalDescription/mods:extent"),
+            "form": self.simplify_xpath("mods:physicalDescription/mods:form"),
+            "subject": "",
+            "keyword": self.simplify_xpath("mods:subject/mods:topic"),
+            "spatial": "",
+            "resource_type": "",
+            "note": self.simplify_xpath("mods:note"),
+            "repository": "",
+            "visibility": self.get_policy(self.pid),
+        }
 
     @staticmethod
     def get_metadata(pid):
@@ -179,8 +150,18 @@ class CollectionMetadata:
             pid=f"{pid.replace('info:fedora/', '').strip()}",
         )
         r = fedora.streamDatastream("MODS")
-        # @Todo: What if MODS doesn't exist?
-        return etree.parse(BytesIO(r.content))
+        try:
+            return etree.parse(BytesIO(r.content))
+        except xml.etree.XMLSyntaxError:
+            return etree.etree.fromstring(
+                """
+                <mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-5.xsd">
+                  <titleInfo>
+                    <title></title>
+                  </titleInfo>
+                </mods>
+                """
+            )
 
     @staticmethod
     def get_policy(pid):
