@@ -1,4 +1,5 @@
 from lxml import etree
+from lxml.etree import XMLSyntaxError
 from io import BytesIO
 import csv
 from utk_exodus.fedora import FedoraObject
@@ -152,7 +153,7 @@ class CollectionMetadata:
         r = fedora.streamDatastream("MODS")
         try:
             return etree.parse(BytesIO(r.content))
-        except lxml.etree.XMLSyntaxError:
+        except XMLSyntaxError:
             return etree.etree.fromstring(
                 """
                 <mods xmlns="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-5.xsd">
