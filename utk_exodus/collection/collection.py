@@ -20,9 +20,12 @@ class CollectionMetadata:
         self.mods = self.get_metadata(pid)
 
     def simplify_xpath(self, xpath):
-        return " | ".join(
-            [value.text for value in self.mods.xpath(xpath, namespaces=self.namespaces)]
-        )
+        try:
+            return " | ".join(
+                [value.text for value in self.mods.xpath(xpath, namespaces=self.namespaces)]
+            )
+        except TypeError:
+            return ""
 
     def get_text_from_multiple_xpaths(self, xpaths):
         all_matches = []
