@@ -134,7 +134,12 @@ class CollectionMetadata:
             "publication_place": "",
             "extent": self.simplify_xpath("mods:physicalDescription/mods:extent"),
             "form": self.simplify_xpath("mods:physicalDescription/mods:form"),
-            "subject": "",
+            "subject":  self.get_valueURIs_from_multiple_xpaths(
+                [
+                    'mods:subject/mods:topic/@valueURI',
+                    'mods:subject[mods:topic]/@valueURI'
+                ]
+            ),
             "keyword": self.simplify_xpath("mods:subject/mods:topic"),
             "spatial": "",
             "resource_type": "",
