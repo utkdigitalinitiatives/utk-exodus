@@ -12,6 +12,7 @@ from utk_exodus.risearch import ResourceIndexSearch
 from utk_exodus.banish import BanishFiles
 from utk_exodus.fedora import FedoraObject
 from utk_exodus.review import ExistingImport
+from utk_exodus.fixes import FixMetadata
 import click
 import requests
 import os
@@ -396,3 +397,44 @@ def add_datastreams(
                 pid=pid,
             )
             fedora.add_datastream(dsid, os.path.join(path, file))
+
+@cli.command(
+    "fix_metadata_sheet",
+    help="Sorts and makes metadata fixes to filesets and attachments CSVs",
+)
+@click.option(
+    "--csv",
+    "-c",
+    required=True,
+    help="The CSV you want to read in or dir with only filesets and attachments CSVs",
+)
+@click.option(
+    "--titles",
+    "-t",
+    required=False,
+    default="MODS,Preserve,Release,Bioform,RELS-INT,HOCR,METS,ALTO",
+    help="Optionally specify which titles to restrict visibility for, default is MODS,Preserve,Release,Bioform,RELS-INT,HOCR,METS,ALTO",
+)
+@click.option(
+    "--remove_columns",
+    "-r",
+    required=False,
+    default="N",
+    help="Optionally specify if unnecessary columns should be removed (Y/N). Will remove everything except source_identifier', 'title', 'model', and 'visibility' columns",
+)
+def fix_metadata(
+    csv: str,
+    titles: str,
+    remove_columns: str
+) -> None:
+    rc = (remove_columns.lower() == "y" or remove_columns.lower() == "yes")
+    print(f"Running metadata fixes on {csv} and restricting {titles} " + ("and removing all columns except 'source_identifier', 'title', 'model', 'visibility'" if rc else "and keeping all columns"))
+    path = csv
+    updater = FixMetadata(titles, rc)
+    if os.path.isdir(path):
+        for filename in tqdm(os.listdir(path)):
+            if filename.endswith('.csv'):
+                csv_filename = os.path.join(path, filename)
+                updater.update_metadata(csv_filename)
+    else:
+        updater.update_metadata(path)
