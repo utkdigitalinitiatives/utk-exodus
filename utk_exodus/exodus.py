@@ -422,7 +422,7 @@ def add_datastreams(
     default="N",
     help="Optionally specify if unnecessary columns should be removed (Y/N). Will remove everything except source_identifier', 'title', 'model', and 'visibility' columns",
 )
-def export_errors(
+def fix_metadata(
     csv: str,
     titles: str,
     remove_columns: str
