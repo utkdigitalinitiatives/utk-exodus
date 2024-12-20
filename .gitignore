@@ -3,3 +3,5 @@ delete
 test.py
 **/__pycache__/
 dist
+imports/
+.DS_Store
