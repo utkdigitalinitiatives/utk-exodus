@@ -25,6 +25,12 @@ class FixMetadata:
         fileset_rows.sort(key=lambda row: ('obj' in row['title'].lower() or 'preserve' in row['title'].lower(), row['title'].lower()))
         rows = attachment_rows + fileset_rows
 
+        for row in rows:
+            if row['title'].lower() == 'ocr':
+                row['rdf_type'] = 'http://pcdm.org/use#ExtractedText'
+            elif row['title'].lower() == 'hocr':
+                row['rdf_type'] = 'http://pcdm.org/file-format-types#HTML'
+
         with open(csv_filename, mode='w', newline='') as outfile:
             fieldnames = reader.fieldnames
             if remove_columns:

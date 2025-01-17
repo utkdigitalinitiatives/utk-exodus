@@ -337,6 +337,10 @@ class RDFTypeGenerator:
             return "http://pcdm.org/file-format-types#StructuredText"
         elif dsid == "MODS":
             return "http://pcdm.org/file-format-types#Markup"
+        elif dsid == "OCR":
+            return "http://pcdm.org/use#ExtractedText"
+        elif dsid == "HOCR":
+            return "http://pcdm.org/file-format-types#HTML"
         else:
             return "http://pcdm.org/use#OriginalFile"
 
@@ -351,7 +355,7 @@ class RDFTypeGenerator:
         elif dsid == "TRANSCRIPT":
             return "http://pcdm.org/use#Transcript"
         elif dsid == "OCR":
-            return "http://pcdm.org/use#Transcript"
+            return "http://pcdm.org/use#ExtractedText"
         elif dsid == "PDF":
             return "http://pcdm.org/file-format-types#Document | http://pcdm.org/use#ServiceFile"
         elif dsid == "ORIGINAL":
