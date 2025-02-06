@@ -18,8 +18,8 @@ class FixMetadata:
         fileset_rows = [row for row in rows if row['model'].lower() == 'fileset']
 
         if len(attachment_rows) + len(fileset_rows) != len(rows):
-            print("unexpected model in sheet")
-            sys.exit(1)
+            print("works found in sheet, will not be written to outfile")
+            # sys.exit(1)
 
         attachment_rows.sort(key=lambda row: ('obj' in row['title'].lower() or 'preserve' in row['title'].lower(), row['title'].lower()))
         fileset_rows.sort(key=lambda row: ('obj' in row['title'].lower() or 'preserve' in row['title'].lower(), row['title'].lower()))
@@ -30,9 +30,15 @@ class FixMetadata:
                 row['rdf_type'] = 'http://pcdm.org/use#ExtractedText'
             elif row['title'].lower() == 'hocr':
                 row['rdf_type'] = 'http://pcdm.org/file-format-types#HTML'
+            elif row['title'].lower() == 'preserve':
+                row['rdf_type'] = 'http://pcdm.org/use#PreservationFile'
 
-        with open(csv_filename, mode='w', newline='') as outfile:
+        with open(csv_filename.split(".csv")[0] + "_fixed.csv", mode='w', newline='') as outfile:
             fieldnames = reader.fieldnames
+            required_fieldnames = ['source_identifier', 'title', 'model', 'visibility', 'rdf_type']
+            for field in required_fieldnames:
+                if field not in fieldnames:
+                    fieldnames.append(field)
             if remove_columns:
                 # Here are the columns that will not get removed when using the remove columns option
                 fieldnames = ['source_identifier', 'title', 'model', 'visibility']
@@ -41,6 +47,10 @@ class FixMetadata:
             for row in rows:
                 if any(keyword in row['title'].lower() for keyword in keywords_list):
                     row['visibility'] = 'restricted'
+                elif 'visibility' in row and row['visibility'] == "":
+                    row['visibility'] = "open" # set default to open if not there
+                elif 'visibility' not in row:
+                    row['visibility'] = "open" # set default to open if not there
                 if remove_columns:
                     row = {key: row[key] for key in fieldnames}
                 writer.writerow(row)
