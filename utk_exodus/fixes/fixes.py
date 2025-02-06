@@ -1,5 +1,4 @@
 import csv
-import sys
 
 class FixMetadata:
     def __init__(self, titles, remove_columns=False):
