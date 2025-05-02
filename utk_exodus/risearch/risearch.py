@@ -143,15 +143,15 @@ class ResourceIndexSearch:
         return len(books), len(pages)
 
     def find_pages_in_book(self, book):
-        query = quote(
-            f"SELECT ?pid ?page WHERE {{ "
-            f"?pid <info:fedora/fedora-system:def/model#hasModel> "
-            f"<info:fedora/islandora:pageCModel> ;"
-            f"<info:fedora/fedora-system:def/relations-external#isMemberOf> "
-            f"<info:fedora/{book}> ; "
-            f"<http://islandora.ca/ontology/relsext#isPageNumber> ?page . }}"
-        )
-        page_results = requests.get(f"{self.base_url}&query={query}").content
+    #     query = quote(
+    #         f"SELECT ?pid ?page WHERE {{ "
+    #         f"?pid <info:fedora/fedora-system:def/model#hasModel> "
+    #         f"<info:fedora/islandora:pageCModel> ;"
+    #         f"<info:fedora/fedora-system:def/relations-external#isMemberOf> "
+    #         f"<info:fedora/{book}> ; "
+    #         f"<http://islandora.ca/ontology/relsext#isPageNumber> ?page . }}"
+    #     )
+        # page_results = requests.get(f"{self.base_url}&query={query}").content
         # TODO remove whichever of these is not being used
         # This was all added in an attempt to get the proper book titles from islandora
         # It worked but these were not the titles we were looking for so this isn't really doing much for us
