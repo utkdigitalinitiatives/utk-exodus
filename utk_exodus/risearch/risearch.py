@@ -152,7 +152,21 @@ class ResourceIndexSearch:
             f"<http://islandora.ca/ontology/relsext#isPageNumber> ?page . }}"
         )
         page_results = requests.get(f"{self.base_url}&query={query}").content
-        return self.clean_pages(page_results)
+        # TODO remove whichever of these is not being used
+        # This was all added in an attempt to get the proper book titles from islandora
+        # It worked but these were not the titles we were looking for so this isn't really doing much for us
+        test_query = quote(
+            f"SELECT ?pid ?page ?title WHERE {{ "
+            f"?pid <info:fedora/fedora-system:def/model#hasModel> "
+            f"<info:fedora/islandora:pageCModel> ;"
+            f"<info:fedora/fedora-system:def/relations-external#isMemberOf> "
+            f"<info:fedora/{book}> ; "
+            f"<http://islandora.ca/ontology/relsext#isPageNumber> ?page ; "
+            f"<http://purl.org/dc/elements/1.1/title> ?title . }}"
+        )
+        test_results = requests.get(f"{self.base_url}&query={test_query}").content
+        # print(test_results)
+        return self.clean_pages(test_results)
 
     def get_compound_object_parts(self, compound_object):
         query = quote(
@@ -175,9 +189,9 @@ class ResourceIndexSearch:
         all_pages = []
         cleaned = results.decode("utf-8").split("\n")
         for item in cleaned:
-            if item != '"pid","page"' and item != "":
+            if item != '"pid","page","title"' and item != "":
                 all_pages.append(
-                    {"pid": item.split(",")[0], "page": item.split(",")[1]}
+                    {"pid": item.split(",")[0], "page": item.split(",")[1], "title": item.split(",")[2]}
                 )
         return all_pages
 
