@@ -11,7 +11,7 @@ NAMESPACES = {
 
 @pytest.fixture(
     params=[
-        {"filename": "heilman:1010.xml",
+        {"filename": "heilman1010.xml",
          "expected_results": {
             'license': ['http://creativecommons.org/licenses/by-nc-nd/3.0/'], 'rights_statement': ['http://rightsstatements.org/vocab/InC/1.0/']
             }
