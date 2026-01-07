@@ -11,7 +11,7 @@ NAMESPACES = {
 
 @pytest.fixture(
     params=[
-        {"filename": "playbills:1052.xml", 
+        {"filename": "playbills1052.xml", 
          "expected_results": {
              'publisher': []
             }
