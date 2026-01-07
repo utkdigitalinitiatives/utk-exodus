@@ -908,7 +908,7 @@ class RightsOrLicenseProperties(BaseProperty):
             >>> NAMESPACES = {
             ... 'mods': 'http://www.loc.gov/mods/v3',
             ... 'xlink': 'http://www.w3.org/1999/xlink' }
-            >>> rights = RightsOrLicenseProperties("tests/fixtures/heilman:1010.xml", NAMESPACES)
+            >>> rights = RightsOrLicenseProperties("tests/fixtures/heilman1010.xml", NAMESPACES)
             >>> rights.find()
             {'license': ['http://creativecommons.org/licenses/by-nc-nd/3.0/'], 'rights_statement': ['http://rightsstatements.org/vocab/InC/1.0/']}
         """
