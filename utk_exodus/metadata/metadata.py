@@ -998,7 +998,7 @@ class LanguageURIProperty(BaseProperty):
             >>> NAMESPACES = {
             ... 'mods': 'http://www.loc.gov/mods/v3',
             ... 'xlink': 'http://www.w3.org/1999/xlink' }
-            >>> language_uri = LanguageURIProperty("tests/fixtures/utsmc:725.xml", NAMESPACES)
+            >>> language_uri = LanguageURIProperty("tests/fixtures/utsmc725.xml", NAMESPACES)
             >>> language_uri.find_term()
             {'language': ['http://id.loc.gov/vocabulary/iso639-2/fre', 'http://id.loc.gov/vocabulary/iso639-2/ita']}
         """
