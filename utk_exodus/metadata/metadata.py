@@ -878,7 +878,7 @@ class PublisherProperty(BaseProperty):
             >>> NAMESPACES = {
             ... 'mods': 'http://www.loc.gov/mods/v3',
             ... 'xlink': 'http://www.w3.org/1999/xlink' }
-            >>> publisher = PublisherProperty("tests/fixtures/playbills:1052.xml", NAMESPACES)
+            >>> publisher = PublisherProperty("tests/fixtures/playbills1052.xml", NAMESPACES)
             >>> publisher.find()
             {'publisher': []}
         """
