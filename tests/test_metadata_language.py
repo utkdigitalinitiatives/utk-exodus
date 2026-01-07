@@ -11,7 +11,7 @@ NAMESPACES = {
 
 @pytest.fixture(
     params=[
-        {"filename": "utsmc:725.xml", 
+        {"filename": "utsmc725.xml", 
          "expected_results": {
              'language': ['http://id.loc.gov/vocabulary/iso639-2/fre', 'http://id.loc.gov/vocabulary/iso639-2/ita']
             }
