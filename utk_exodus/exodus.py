@@ -47,9 +47,14 @@ def cli() -> None:
 def works(config: str, path: str, output: str) -> None:
     metadata = MetadataMapping(config, path)
     metadata.write_csv(output)
+    # TODO changed this temporarily to get things to work
+    #r = requests.get(
+    #    "https://raw.githubusercontent.com/utkdigitalinitiatives/m3_profiles/main/maps/utk.yml"
+    #)
     r = requests.get(
-        "https://raw.githubusercontent.com/utkdigitalinitiatives/m3_profiles/main/maps/utk.yml"
+       "http://hykuimports.lib.utk.edu/files/hyku-import/utk.yml"
     )
+
     with open("delete/m3.yml", "wb") as f:
         f.write(r.content)
     print("Validating import ...")
@@ -74,7 +79,7 @@ def works(config: str, path: str, output: str) -> None:
     "--remote",
     "-r",
     help="Specify remote address of files",
-    default="https://digital.lib.utk.edu/collections/islandora/object/",
+    default="https://esb.lib.utk.edu/islandora/object/",
 )
 def add_files(sheet: str, files_sheet: str, what_to_add: str, remote: str) -> None:
     if not files_sheet:
@@ -125,7 +130,8 @@ def add_files(sheet: str, files_sheet: str, what_to_add: str, remote: str) -> No
     "--remote",
     "-r",
     help="Specify remote address of files",
-    default="https://digital.lib.utk.edu/collections/islandora/object/",
+    # old link - https://digital.lib.utk.edu/collections/islandora/object/
+    default="https://esb.lib.utk.edu/islandora/object/",
 )
 @click.option(
     "--total_size",
@@ -185,8 +191,12 @@ def generate_sheet(
     model: str,
     output: str,
 ) -> None:
+    # TODO changed this temporarily to get things to work, might want to change it back, maybe not
+    #r = requests.get(
+    #    "https://raw.githubusercontent.com/utkdigitalinitiatives/m3_profiles/main/maps/utk.yml"
+    #)
     r = requests.get(
-        "https://raw.githubusercontent.com/utkdigitalinitiatives/m3_profiles/main/maps/utk.yml"
+       "http://hykuimports.lib.utk.edu/files/hyku-import/utk.yml"
     )
     with open("tmp/m3.yml", "wb") as f:
         f.write(r.content)
@@ -438,3 +448,7 @@ def fix_metadata(
                 updater.update_metadata(csv_filename)
     else:
         updater.update_metadata(path)
+
+if __name__ == "__main__":
+    print("running locally")
+    cli()

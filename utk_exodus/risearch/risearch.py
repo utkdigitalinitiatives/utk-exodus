@@ -7,7 +7,8 @@ class ResourceIndexSearch:
         self,
         language="sparql",
         riformat="CSV",
-        ri_endpoint="https://porter.lib.utk.edu/fedora/risearch",
+        # old link - https://digital.lib.utk.edu/collections/islandora/object/
+        ri_endpoint="https://esb.lib.utk.edu/fedora/risearch",
     ):
         self.risearch_endpoint = ri_endpoint
         self.valid_languages = ("itql", "sparql")

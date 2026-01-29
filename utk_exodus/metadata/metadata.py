@@ -189,29 +189,33 @@ class NameProperty(XMLtoDictProperty):
         for name in self.all_names:
             roles = []
             local_roles = []
+            # This is a very convoluted way of fixing this but it worked so its staying for now
             try:
-                roles.append(
-                    name["mods:role"]["mods:roleTerm"]["#text"]
-                    .lower()
-                    .replace(" ", "_")
-                )
-                local_roles.append(
-                    f"utk_{name['mods:role']['mods:roleTerm']['#text'].lower().replace(' ', '_')}"
-                )
-            except KeyError:
-                print(name)
-            # TODO: A name can have multiple roles
-            except TypeError:
                 if isinstance(name["mods:role"], list):
                     for role in name["mods:role"]:
-                        if "#text" in role["mods:roleTerm"]:
-                            roles.append(
-                                role["mods:roleTerm"]["#text"].lower().replace(" ", "_")
-                            )
-                            local_roles.append(
-                                f"utk_{role['mods:roleTerm']['#text'].lower().replace(' ', '_')}"
-                            )
-                        else:
+                        if isinstance(role["mods:roleTerm"], list):
+                            for role_term in role["mods:roleTerm"]:
+                                if isinstance(role_term, dict) and "#text" in role_term:
+                                    roles.append(
+                                        role_term["#text"].lower().replace(" ", "_")
+                                    )
+                                    local_roles.append(
+                                        f"utk_{role_term['#text'].lower().replace(' ', '_')}"
+                                    )
+                                elif isinstance(role_term, str):
+                                    roles.append(role_term.lower().replace(" ", "_"))
+                                    local_roles.append(
+                                        f"utk_{role_term.lower().replace(' ', '_')}"
+                                    )
+                        elif isinstance(role["mods:roleTerm"], dict):
+                            if "#text" in role["mods:roleTerm"]:
+                                roles.append(
+                                    role["mods:roleTerm"]["#text"].lower().replace(" ", "_")
+                                )
+                                local_roles.append(
+                                    f"utk_{role['mods:roleTerm']['#text'].lower().replace(' ', '_')}"
+                                )
+                        elif isinstance(role["mods:roleTerm"], str):
                             roles.append(
                                 role["mods:roleTerm"].lower().replace(" ", "_")
                             )
@@ -219,12 +223,38 @@ class NameProperty(XMLtoDictProperty):
                                 f"utk_{role['mods:roleTerm'].lower().replace(' ', '_')}"
                             )
                 else:
-                    roles.append(
-                        name["mods:role"]["mods:roleTerm"].lower().replace(" ", "_")
-                    )
-                    local_roles.append(
-                        f"utk_{name['mods:role']['mods:roleTerm'].lower().replace(' ', '_')}"
-                    )
+                    if isinstance(name["mods:role"]["mods:roleTerm"], list):
+                        for role_term in name["mods:role"]["mods:roleTerm"]:
+                            if isinstance(role_term, dict) and "#text" in role_term:
+                                roles.append(
+                                    role_term["#text"].lower().replace(" ", "_")
+                                )
+                                local_roles.append(
+                                    f"utk_{role_term['#text'].lower().replace(' ', '_')}"
+                                )
+                            elif isinstance(role_term, str):
+                                roles.append(role_term.lower().replace(" ", "_"))
+                                local_roles.append(
+                                    f"utk_{role_term.lower().replace(' ', '_')}"
+                                )
+                    elif isinstance(name["mods:role"]["mods:roleTerm"], dict):
+                        roles.append(
+                            name["mods:role"]["mods:roleTerm"]["#text"]
+                            .lower()
+                            .replace(" ", "_")
+                        )
+                        local_roles.append(
+                            f"utk_{name['mods:role']['mods:roleTerm']['#text'].lower().replace(' ', '_')}"
+                        )
+                    elif isinstance(name["mods:role"]["mods:roleTerm"], str):
+                        roles.append(
+                            name["mods:role"]["mods:roleTerm"].lower().replace(" ", "_")
+                        )
+                        local_roles.append(
+                            f"utk_{name['mods:role']['mods:roleTerm'].lower().replace(' ', '_')}"
+                        )
+            except KeyError:
+                print(name)
             # TODO: Rework this.  It's not pretty but it works.
             name_value = name["mods:namePart"]
             if "@valueURI" in name:
