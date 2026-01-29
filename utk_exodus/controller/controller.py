@@ -66,8 +66,12 @@ class InterfaceController:
 
     @staticmethod
     def __get_m3():
+        # TODO changed this temporarily to get things to work
+        #r = requests.get(
+        #    "https://raw.githubusercontent.com/utkdigitalinitiatives/m3_profiles/main/maps/utk.yml"
+        #)
         r = requests.get(
-            "https://raw.githubusercontent.com/utkdigitalinitiatives/m3_profiles/main/maps/utk.yml"
+            "http://hykuimports.lib.utk.edu/files/hyku-import/utk.yml"
         )
         with open("tmp/m3.yml", "wb") as f:
             f.write(r.content)
