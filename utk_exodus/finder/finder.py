@@ -9,7 +9,7 @@ class FileOrganizer:
             csv,
             what_to_add=['filesets', 'attachments'],
             #old link - https://digital.lib.utk.edu/collections/islandora/object/
-            remote='https://esb.lib.utk.edu/islandora/object/'
+            remote='https://digital.lib.utk.edu/collections/islandora/object/'
     ):
         self.original_csv = csv
         self.remote = remote
@@ -50,7 +50,7 @@ class FileOrganizer:
             initial_data['parents'] = f"{row['source_identifier'].replace('.xml', '')}"
         if row['model'] == "Pdf" and filename in ("OBJ", "PDFA"):
             # old link - https://digital.lib.utk.edu/collections/islandora/object/
-            initial_data['remote_files'] = f"https://esb.lib.utk.edu/islandora/object/{row['source_identifier'].replace('_MODS.xml', '').replace('_', ':').replace('.xml', '')}/datastream/{filename}/view.pdf"
+            initial_data['remote_files'] = f"https://digital.lib.utk.edu/collections/islandora/object/{row['source_identifier'].replace('_MODS.xml', '').replace('_', ':').replace('.xml', '')}/datastream/{filename}/view.pdf"
         for k, v in row.items():
             if k not in default_headings:
                 initial_data[k] = ''
@@ -393,7 +393,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         # old link - https://digital.lib.utk.edu/collections/islandora/object/
-        '-r', "--remote", dest="remote", help="Remote File Server", default='https://esb.lib.utk.edu/islandora/object/'
+        '-r', "--remote", dest="remote", help="Remote File Server", default='https://digital.lib.utk.edu/collections/islandora/object/'
     )
     args = parser.parse_args()
     files_sheet = f"{args.sheet.replace('.csv', '')}_with_filesets_and_attachments.csv"

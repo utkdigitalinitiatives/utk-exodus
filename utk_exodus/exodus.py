@@ -79,7 +79,7 @@ def works(config: str, path: str, output: str) -> None:
     "--remote",
     "-r",
     help="Specify remote address of files",
-    default="https://esb.lib.utk.edu/islandora/object/",
+    default="https://digital.lib.utk.edu/collections/islandora/object/",
 )
 def add_files(sheet: str, files_sheet: str, what_to_add: str, remote: str) -> None:
     if not files_sheet:
@@ -131,7 +131,7 @@ def add_files(sheet: str, files_sheet: str, what_to_add: str, remote: str) -> No
     "-r",
     help="Specify remote address of files",
     # old link - https://digital.lib.utk.edu/collections/islandora/object/
-    default="https://esb.lib.utk.edu/islandora/object/",
+    default="https://digital.lib.utk.edu/collections/islandora/object/",
 )
 @click.option(
     "--total_size",
